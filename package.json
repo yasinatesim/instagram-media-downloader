@@ -16,6 +16,7 @@
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
     "husky": "^4.2.5",
+    "instagram-private-api": "^1.44.0",
     "md5": "^2.2.1",
     "next": "9.4.4",
     "next-images": "^1.4.0",

@@ -1,4 +1,101 @@
-body {
-	background-color: #fa6585;
-	color: #fff;
+$base-color: #303036;
+$text-color: #333;
+$light-color: #fff;
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.label-before {
+  line-height: 20px;
+  font-size: 12px;
+  top: -10px;
+  background-color: $light-color;
+  padding: 0 6px;
+  left: 9px;
+}
+
+.field {
+  position: relative;
+  margin-bottom: 15px;
+  label::before {
+    content: attr(title);
+    position: absolute;
+    top: 0;
+    left: 15px;
+    line-height: 40px;
+    font-size: 14px;
+    color: $base-color;
+    transition: 300ms all;
+  }
+  input {
+    width: 100%;
+    line-height: 40px;
+    padding: 0 15px;
+    box-sizing: border-box;
+    font-size: 14px;
+    color: $text-color;
+    border: 1px solid $base-color;
+    border-radius: 3px;
+    &:focus {
+      outline: 0;
+    }
+    &:disabled + label::before,
+    &:valid + label::before {
+      @extend .label-before;
+      content: attr(data-title);
+    }
+    &:disabled + label::before,
+    &:focus + label::before {
+      @extend .label-before;
+    }
+  }
+}
+
+.form-btn {
+  color: $light-color;
+  background-color: $base-color;
+  padding: 8px;
+  font-size: 16px;
+  margin-top: 16px;
+  border-radius: 4px;
+  width: 100%;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.form-btn span {
+  transition: all 500ms;
+  opacity: 1;
+}
+.form-btn svg {
+  display: none;
+  margin: 0 auto;
+  transition: all 500ms;
+}
+.form-btn svg path,
+.form-btn svg rect {
+  fill: $light-color;
+}
+
+.loading-start span {
+  display: none;
+  opacity: 0;
+}
+.loading-start svg {
+  display: block;
+  opacity: 1;
 }

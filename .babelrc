@@ -3,9 +3,7 @@
   "plugins": [
     ["module-resolver", {
       "alias": {
-        "@/scss": "./assets/scss",
-        "@/img": "./assets/img",
-        "@": "./src"
+        "@/scss": "./assets/scss"
       }
     }]
   ]
