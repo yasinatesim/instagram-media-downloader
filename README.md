@@ -30,7 +30,7 @@ Instagram Full Size Picture
 
 This project is a full size Instagram photo display tool.
 
-💡Idea
+### 💡Idea
 Instagram profile picture enlargers on the internet are not working due to Instagram's new API update. I found a working API and made the web simple interface 😉
 
 
