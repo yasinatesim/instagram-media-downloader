@@ -1,0 +1,50 @@
+{
+  "root": true,
+  "parser": "babel-eslint",
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:jsx-a11y/recommended",
+    "plugin:react-hooks/recommended",
+    "airbnb"
+  ],
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es6": true,
+    "node": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 2015,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "plugins": [],
+	"rules": {
+    "import/no-unresolved": "off",
+    "react/react-in-jsx-scope": "off",
+    "react/jsx-filename-extension": "off",
+    "jsx-a11y/anchor-is-valid": "off",
+    "react/jsx-props-no-spreading": "off",
+    "react/require-default-props": "off",
+    "jsx-a11y/accessible-emoji": "off",
+    "jsx-a11y/no-static-element-interactions" : "off",
+    "jsx-a11y/click-events-have-key-events" : "off",
+    "jsx-a11y/label-has-associated-control": "off",
+    "react/no-unescaped-entities" : "off",
+    "object-curly-newline" : "off",
+    "react/forbid-prop-types" : "off",
+    "react/no-danger" : "off",
+    "camelcase": "off",
+    "max-len": "off"
+  }
+}
