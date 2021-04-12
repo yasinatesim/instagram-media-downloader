@@ -21,7 +21,7 @@ function Home() {
 
       const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/${value}`);
       const { url } = await res.json();
-      window.open(url);
+      window.location.href = url;
 
       setFormSubmit(false);
       setValue('');
