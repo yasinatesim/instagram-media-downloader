@@ -239,6 +239,7 @@ Get Instagram full-resolution profile picture with url slug.
 
 
 - **Home**
+
 It is the page that brings the full-resolution profile picture of Instagram from the input box.
 
 
@@ -304,7 +305,7 @@ yarn install
 yarn dev
 ```
 
-
+App is running on [http://localhost:3000](http://localhost:3000)
 
 
 

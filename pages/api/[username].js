@@ -6,14 +6,19 @@ async function login() {
   await ig.account.login(process.env.NEXT_PUBLIC_IG_USERNAME, process.env.NEXT_PUBLIC_IG_PASSWORD);
 }
 
+function sleep (time) {
+  return new Promise((resolve) => setTimeout(resolve, time));
+}
+
 async function Index(req, res) {
   const { username } = req.query
 
-  await login();
+  await sleep(5000).then(async () => {
+    await login();
 
-  const url = (await ig.user.info(await ig.user.getIdByUsername(username))).hd_profile_pic_url_info.url;
-
-  res.status(200).json({ url });
+    const url = (await ig.user.info(await ig.user.getIdByUsername(username))).hd_profile_pic_url_info.url;
+    res.status(200).json({ url });
+  })
 }
 
 export default Index;
