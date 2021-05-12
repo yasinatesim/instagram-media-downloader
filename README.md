@@ -1,27 +1,20 @@
 
 
 <h3 align="center">
-  <br>
-   <a  href="https://github.com/yasinatesim/instagram-fullsize-picture"><img  src="https://yasinates.com/instagram-fullsize-picture.png"  alt="Instagram Profile Picture"  width="200"></a>
-  <br>
+  <br />
+   <a  href="https://github.com/yasinatesim/instagram-fullsize-picture"><img  src="https://yasinates.com/instagram-fullsize-picture.png"  alt="Instagram Profile Picture"  width="200" /></a>
+  <br />
 Instagram Full Size Picture
-  <br>
+  <br />
 </h3>
-<hr>
+<hr />
 
 <p  align="center">This project is a full size Instagram photo display tool. 😎</p>
-
-
 
 
   <p align="center">
 · <a  href="https://instagram-fullsize-picture.yasinatesim.vercel.app/">View Demo</a>
   </p>
-</p>
-
-
-
-
 
 
 ## 📖 About
@@ -37,179 +30,35 @@ Instagram profile picture enlargers on the internet are not working due to Insta
 ### 📚Tech Stack
 
 <table>
-
-
-
-<tr>
-
-
-
-<td>
-
-
-
-<a  href="https://github.com/dilame/instagram-private-api">dilame/instagram-private-api</a>
-
-
-
-</td>
-
-
-
-<td>NodeJS Instagram private API SDK. Written in TypeScript.</td>
-
-
-
-</tr>
-
-<tr>
-
-
-
-<td>
-
-
-
-<a  href="https://nextjs.org/">Next.js</a>
-
-
-
-</td>
-
-
-
-<td>The React Framework for SEO Friendly website and more...</td>
-
-
-
-</tr>
-
-
-
-<tr>
-
-
-
-<td>
-
-
-
-<a  href="https://github.com/conventional-changelog/commitlint">Commitlint</a>
-
-
-
-</td>
-
-
-
-<td>Send commit messages to <a  href="https://www.conventionalcommits.org/en/v1.0.0/">conventional commits</a> rules</td>
-
-
-
-</tr>
-
-
-
-<tr>
-
-
-
-<tr>
-
-
-
-<td>
-
-
-
-<a  href="https://sass-lang.com/">SASS</a>
-
-
-
-</td>
-
-
-
-<td>The most mature, stable, and powerful professional grade CSS extension language in the world</td>
-
-
-
-</tr>
-
-
-
-<tr>
-
-
-
-<td>
-
-
-
-<a  href="https://editorconfig.org/">Editorconfig</a>
-
-
-
-</td>
-
-
-
-<td>Helps maintain consistent coding styles for my working on the same project across various editors and IDEs</td>
-
-
-
-</tr>
-
-
-
-<tr>
-
-
-
-<td>
-
-
-
-<a  href="https://eslint.org/">Eslint</a>
-
-
-
-</td>
-
-
-
-<td>Find and fix problems in your JavaScript code</td>
-
-
-
-</tr>
-
-
-
-<tr>
-
-
-
-<td>
-
-
-
-<a  href="https://prettier.io/">Prettier</a>
-
-
-
-</td>
-
-
-
-<td>An opinionated code formatter</td>
-
-
-
-</tr>
-
+  <tr>
+    <td> <a href="https://github.com/dilame/instagram-private-api">dilame/instagram-private-api</a></td>
+    <td>NodeJS Instagram private API SDK. Written in TypeScript.</td>
+  </tr>
+  <tr>
+    <td><a href="https://nextjs.org/">Next.js</a></td>
+    <td>The React Framework for SEO Friendly website and more...</td>
+  </tr>
+  <tr>
+    <td> <a href="https://github.com/conventional-changelog/commitlint">Commitlint</a></td>
+    <td>Send commit messages to <a href="https://www.conventionalcommits.org/en/v1.0.0/">conventional commits</a> rules</td>
+  </tr>
+  <tr>
+    <td><a href="https://sass-lang.com/">SASS</a></td>
+    <td>The most mature, stable, and powerful professional grade CSS extension language in the world</td>
+  </tr>
+  <tr>
+    <td><a href="https://editorconfig.org/">Editorconfig</a></td>
+    <td>Helps maintain consistent coding styles for my working on the same project across various editors and IDEs</td>
+  </tr>
+  <tr>
+    <td><a href="https://eslint.org/">Eslint</a></td>
+    <td>Find and fix problems in your JavaScript code</td>
+  </tr>
+  <tr>
+    <td><a href="https://prettier.io/">Prettier</a></td>
+    <td>An opinionated code formatter</td>
+  </tr>
 </table>
-
 
 
 
