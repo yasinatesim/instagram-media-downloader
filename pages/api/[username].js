@@ -13,7 +13,7 @@ function sleep (time) {
 async function Index(req, res) {
   const { username } = req.query
 
-  await sleep(5000).then(async () => {
+  await sleep(2500).then(async () => {
     await login();
 
     const url = (await ig.user.info(await ig.user.getIdByUsername(username))).hd_profile_pic_url_info.url;
