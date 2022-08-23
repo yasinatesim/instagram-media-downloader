@@ -3,7 +3,7 @@ const { IgApiClient } = require('instagram-private-api');
 const { writeFileSync, readFileSync } = require('fs');
 const path = require('path');
 
-const SESSION_FILE_PATH = path.resolve(path.join(process.cwd(), 'session.json'));
+const SESSION_FILE_PATH = path.join(process.cwd(), '/session.json');
 
 function fakeSave(data) {
   writeFileSync(SESSION_FILE_PATH, JSON.stringify(data), 'utf8');
@@ -41,11 +41,9 @@ async function Index(req, res) {
         await ig.state.deserialize(fakeLoad(SESSION_FILE_PATH));
         await ig.user.info(ig.state.cookieUserId);
       } catch (e) {
-        console.log(e, 'SESSION NOT VALID, DOING LOGIN');
+        await ig.account.login(process.env.NEXT_PUBLIC_IG_USERNAME, process.env.NEXT_PUBLIC_IG_PASSWORD);
       }
     }
-
-    await ig.account.login(process.env.NEXT_PUBLIC_IG_USERNAME, process.env.NEXT_PUBLIC_IG_PASSWORD);
 
     const { url } = (await ig.user.info(await ig.user.getIdByUsername(username))).hd_profile_pic_url_info;
     res.status(200).json({ url });
