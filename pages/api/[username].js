@@ -1,25 +1,29 @@
-const { IgApiClient } = require('instagram-private-api');
+import { IgApiClient } from 'instagram-private-api';
+import { existsSync, chmod, writeFile, readFile } from 'fs';
+import getConfig from 'next/config';
+import path from 'path';
 
-const { writeFileSync, readFileSync, chmod } = require('fs');
-const path = require('path');
-
-const SESSION_FILE_PATH = path.join(process.cwd(), '/public/session.json');
+const SESSION_FILE_PATH = `${path.join(getConfig().publicRuntimeConfig.staticFolder, 'session.json')}`;
 
 chmod(SESSION_FILE_PATH, 777);
 
 function fakeSave(data) {
-  writeFileSync(SESSION_FILE_PATH, JSON.stringify(data), 'utf8');
-  return data;
+  // write file
+  writeFile(SESSION_FILE_PATH, JSON.stringify(data), (err) => {
+    if (err) throw err;
+  });
 }
 
 function fakeExists() {
-  const data = readFileSync(SESSION_FILE_PATH, 'utf-8');
-  if (data.length > 1) return true;
-  return false;
+  return existsSync(SESSION_FILE_PATH);
 }
 
 function fakeLoad() {
-  return readFileSync(SESSION_FILE_PATH);
+  const datas = readFile(SESSION_FILE_PATH, 'utf8', (err, data) => {
+    if (err) throw err;
+    return data;
+  });
+  return JSON.parse(datas);
 }
 
 function sleep(time) {
@@ -32,7 +36,6 @@ async function Index(req, res) {
   await sleep(2500).then(async () => {
     const ig = new IgApiClient();
     ig.state.generateDevice(process.env.NEXT_PUBLIC_IG_USERNAME);
-    await ig.qe.syncLoginExperiments();
     ig.request.end$.subscribe(async () => {
       const serialized = await ig.state.serialize();
       delete serialized.constants;
@@ -40,9 +43,10 @@ async function Index(req, res) {
     });
     if (fakeExists()) {
       try {
-        await ig.state.deserialize(fakeLoad(SESSION_FILE_PATH));
+        await ig.state.deserialize(fakeLoad());
         await ig.user.info(ig.state.cookieUserId);
       } catch (e) {
+        await ig.qe.syncLoginExperiments();
         await ig.account.login(process.env.NEXT_PUBLIC_IG_USERNAME, process.env.NEXT_PUBLIC_IG_PASSWORD);
       }
     }
