@@ -1,9 +1,11 @@
 const { IgApiClient } = require('instagram-private-api');
 
-const { writeFileSync, readFileSync } = require('fs');
+const { writeFileSync, readFileSync, chmod } = require('fs');
 const path = require('path');
 
 const SESSION_FILE_PATH = path.join(process.cwd(), '/session.json');
+
+chmod(SESSION_FILE_PATH, 777);
 
 function fakeSave(data) {
   writeFileSync(SESSION_FILE_PATH, JSON.stringify(data), 'utf8');
