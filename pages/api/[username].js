@@ -3,7 +3,7 @@ const { IgApiClient } = require('instagram-private-api');
 const { writeFileSync, readFileSync, chmod } = require('fs');
 const path = require('path');
 
-const SESSION_FILE_PATH = path.join(process.cwd(), '/session.json');
+const SESSION_FILE_PATH = path.join(process.cwd(), '/public/session.json');
 
 chmod(SESSION_FILE_PATH, 777);
 
