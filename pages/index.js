@@ -9,12 +9,6 @@ function Home() {
     setValue(event.target.value);
   };
 
-  const onKeyDown = (event) => {
-    if (event.keyCode === 13) {
-      handleSubmit();
-    }
-  };
-
   const handleSubmit = async () => {
     if (value !== '') {
       setFormSubmit(true);
@@ -28,13 +22,17 @@ function Home() {
     }
   };
 
+  const onKeyDown = (event) => {
+    if (event.keyCode === 13) {
+      handleSubmit();
+    }
+  };
+
   return (
     <>
       <Helmet
         title="Instagram Profile Picture Full Resolution"
-        meta={[
-          { property: 'og:title', content: 'Instagram Profile Picture Full Resolution' },
-        ]}
+        meta={[{ property: 'og:title', content: 'Instagram Profile Picture Full Resolution' }]}
       />
 
       <div className="container">
@@ -51,6 +49,7 @@ function Home() {
           />
           <label htmlFor="text" title="Enter Instagram Username" data-title="Username" />
           <button
+            type="button"
             className={`form-btn ${formSubmit ? 'loading-start' : ''}`}
             onClick={handleSubmit}
             disabled={formSubmit}
