@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import { Helmet } from 'react-helmet';
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 
 function Home() {
+  const { executeRecaptcha } = useGoogleReCaptcha();
+
   const [value, setValue] = useState('');
   const [formSubmit, setFormSubmit] = useState(false);
 
@@ -10,15 +14,32 @@ function Home() {
   };
 
   const handleSubmit = async () => {
-    if (value !== '') {
-      setFormSubmit(true);
+    if (!executeRecaptcha) {
+      return;
+    }
 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/${value}`);
-      const { url } = await res.json();
-      window.location.href = url;
+    try {
+      const token = await executeRecaptcha();
+      if (!token) {
+        return;
+      }
 
-      setFormSubmit(false);
-      setValue('');
+      if (value !== '') {
+        setFormSubmit(true);
+
+        const res = await axios.post(`${process.env.NEXT_PUBLIC_APP_URL}/api`, {
+          username: value,
+          token,
+        });
+        const { url } = await res.json();
+        window.location.href = url;
+
+        setFormSubmit(false);
+        setValue('');
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(error);
     }
   };
 

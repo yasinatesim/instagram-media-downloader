@@ -129,6 +129,10 @@ git clone https://github.com/yasinatesim/instagram-fullsize-picture.git
 
 ```bash
 
+# https://www.google.com/recaptcha/admin/create
+NEXT_PUBLIC_RECAPTCHA_SECRET_KEY=
+NEXT_PUBLIC_RECAPTCHA_SITE_KEY=
+
 NEXT_PUBLIC_IG_USERNAME={{YOUR-INSTAGRAM-USERNAME}}
 
 NEXT_PUBLIC_IG_PASSWORD={{YOUR-INSTAGRAM-PASSWORD}}
