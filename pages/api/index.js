@@ -13,6 +13,8 @@ const verifyRecaptcha = async (token) => {
   return axios.post(verificationUrl);
 };
 
+
+
 async function Index(req, res) {
   const { token, username } = req.body;
 
@@ -47,5 +49,7 @@ async function Index(req, res) {
     });
   }
 }
+
+
 
 export default Index;
