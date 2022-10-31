@@ -21,7 +21,7 @@ async function Index(req, res) {
     const response = await verifyRecaptcha(token);
 
     if (response.data.success && response.data.score >= 0.5) {
-      await sleep(2500).then(async () => {
+      return sleep(2500).then(async () => {
         const ig = new IgApiClient();
         ig.state.deviceString = process.env.NEXT_PUBLIC_IG_DEVICE_STRING;
         ig.state.deviceId = process.env.NEXT_PUBLIC_IG_DEVICE_ID;
@@ -36,6 +36,7 @@ async function Index(req, res) {
         return res.status(200).json({ url });
       });
     }
+
     return res.status(400).json({
       status: 'Failed',
       message: 'Something went wrong, please try again!!!',

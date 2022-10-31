@@ -31,7 +31,7 @@ function Home() {
           username: value,
           token,
         });
-        const { url } = await res.json();
+        const { url } = await res.data;
         window.location.href = url;
 
         setFormSubmit(false);
