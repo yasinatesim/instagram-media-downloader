@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { IgApiClient } from 'instagram-private-api';
 import axios from 'axios';
 
