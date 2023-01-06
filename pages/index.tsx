@@ -1,8 +1,9 @@
-// @ts-nocheck
 import React, { useState } from 'react';
-import axios from 'axios';
-import { Helmet } from 'react-helmet';
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
+
+import Head from 'next/head';
+
+import axios from 'axios';
 
 function Home() {
   const { executeRecaptcha } = useGoogleReCaptcha();
@@ -10,7 +11,7 @@ function Home() {
   const [value, setValue] = useState('');
   const [formSubmit, setFormSubmit] = useState(false);
 
-  const onChange = (event) => {
+  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
   };
 
@@ -44,18 +45,18 @@ function Home() {
     }
   };
 
-  const onKeyDown = (event) => {
-    if (event.keyCode === 13) {
+  const onKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === 'Enter') {
       handleSubmit();
     }
   };
 
   return (
     <>
-      <Helmet
-        title="Instagram Profile Picture Full Resolution"
-        meta={[{ property: 'og:title', content: 'Instagram Profile Picture Full Resolution' }]}
-      />
+      <Head>
+        <title>Instagram Profile Picture Full Resolution</title>
+        <meta name="og:title" content="Instagram Profile Picture Full Resolution" />
+      </Head>
 
       <div className="container">
         <div className="field">
@@ -86,9 +87,6 @@ function Home() {
               width="20px"
               height="26px"
               viewBox="0 0 24 30"
-              style={{
-                enableBackground: 'new 0 0 50 50',
-              }}
               xmlSpace="preserve"
             >
               <rect x={0} y={13} width={4} height={5} fill="#333">

@@ -1,12 +1,7 @@
 /** @type {import('next').NextConfig} */
-
-const withImages = require('next-images');
-
-module.exports = {
+const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  ...withImages(),
-  publicRuntimeConfig: {
-    staticFolder: './public',
-  },
 };
+
+module.exports = nextConfig;
