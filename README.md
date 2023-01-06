@@ -128,6 +128,7 @@ git clone https://github.com/yasinatesim/instagram-fullsize-picture.git
 2. Add .env file on root
 
 ```bash
+NEXT_PUBLIC_ADMIN_PASSWORD='{{your-admin-password}}'
 
 # https://www.google.com/recaptcha/admin/create
 NEXT_PUBLIC_RECAPTCHA_SECRET_KEY=
