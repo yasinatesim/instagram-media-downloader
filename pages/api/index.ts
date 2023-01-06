@@ -1,7 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
 import axios from 'axios';
-import { IgApiClient } from 'instagram-private-api';
+import Bluebird from 'bluebird';
+import inquirer from 'inquirer';
+import { IgApiClient, IgCheckpointError } from 'instagram-private-api';
 
 function sleep(time: number) {
   return new Promise((resolve) => setTimeout(resolve, time));
@@ -23,24 +25,40 @@ async function Index(req: NextApiRequest, res: NextApiResponse) {
     const response = await verifyRecaptcha(token);
 
     if (response.data.success && response.data.score >= 0.5) {
-      return sleep(2500).then(async () => {
-        const ig = new IgApiClient();
+    return sleep(2500).then(() => {
+      const ig = new IgApiClient();
 
-        ig.state.deviceString = process.env.NEXT_PUBLIC_IG_DEVICE_STRING as string;
-        ig.state.deviceId = process.env.NEXT_PUBLIC_IG_DEVICE_ID as string;
-        ig.state.uuid = process.env.NEXT_PUBLIC_IG_UUID as string;
-        ig.state.phoneId = process.env.NEXT_PUBLIC_IG_PHONE_ID as string;
-        ig.state.adid = process.env.NEXT_PUBLIC_IG_ADID as string;
-        ig.state.build = process.env.NEXT_PUBLIC_IG_BUILD as string;
+      ig.state.deviceString = process.env.NEXT_PUBLIC_IG_DEVICE_STRING as string;
+      ig.state.deviceId = process.env.NEXT_PUBLIC_IG_DEVICE_ID as string;
+      ig.state.uuid = process.env.NEXT_PUBLIC_IG_UUID as string;
+      ig.state.phoneId = process.env.NEXT_PUBLIC_IG_PHONE_ID as string;
+      ig.state.adid = process.env.NEXT_PUBLIC_IG_ADID as string;
+      ig.state.build = process.env.NEXT_PUBLIC_IG_BUILD as string;
 
-        await ig.account.login(
+      return Bluebird.try(async () => {
+        const auth = await ig.account.login(
           process.env.NEXT_PUBLIC_IG_USERNAME as string,
           process.env.NEXT_PUBLIC_IG_PASSWORD as string
         );
-
-        const { url } = (await ig.user.info(await ig.user.getIdByUsername(username))).hd_profile_pic_url_info;
-        return res.status(200).json({ url });
-      });
+        if (auth) {
+          const { url } = (await ig.user.info(await ig.user.getIdByUsername(username))).hd_profile_pic_url_info;
+          return res.status(200).json({ url });
+        }
+      })
+        .catch(IgCheckpointError, async () => {
+          await ig.challenge.auto(true); // Requesting sms-code or click "It was me" button
+          console.log(ig.state.checkpoint); // Challenge info here
+          const { code } = await inquirer.prompt([
+            {
+              type: 'input',
+              name: 'code',
+              message: 'Enter code',
+            },
+          ]);
+          console.log(await ig.challenge.sendSecurityCode(code));
+        })
+        .catch((e) => console.log('Could not resolve checkpoint:', e, e.stack));
+    });
     }
 
     return res.status(400).json({
