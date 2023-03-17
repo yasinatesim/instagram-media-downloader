@@ -14,8 +14,6 @@
     "@commitlint/cli": "^9.0.1",
     "@commitlint/config-conventional": "^9.0.1",
     "axios": "^1.1.3",
-    "bluebird": "^3.7.2",
-    "inquirer": "^9.1.4",
     "instagram-private-api": "^1.45.3",
     "md5": "^2.3.0",
     "next": "12.2.5",
