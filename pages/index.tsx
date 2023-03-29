@@ -39,9 +39,8 @@ function Home() {
         setFormSubmit(false);
         setValue('');
       }
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error(error);
+    } catch (error: any) {
+      alert(`API error: ${error.response?.data?.message ?? error.message}`);
     }
   };
 
@@ -50,7 +49,6 @@ function Home() {
       handleSubmit();
     }
   };
-
   return (
     <>
       <Head>

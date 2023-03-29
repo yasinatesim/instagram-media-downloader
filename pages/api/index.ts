@@ -3,6 +3,11 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import axios from 'axios';
 import { IgApiClient } from 'instagram-private-api';
 
+type ErrorResponse = {
+  status: string;
+  message: string;
+};
+
 const verifyRecaptcha = async (token: string) => {
   const secretKey = process.env.NEXT_PUBLIC_RECAPTCHA_SECRET_KEY;
 
@@ -11,7 +16,7 @@ const verifyRecaptcha = async (token: string) => {
   return axios.post(verificationUrl);
 };
 
-async function Index(req: NextApiRequest, res: NextApiResponse) {
+async function Index(req: NextApiRequest, res: NextApiResponse<ErrorResponse | { url: string }>) {
   const { token, username } = req.body;
 
   try {
@@ -42,11 +47,10 @@ async function Index(req: NextApiRequest, res: NextApiResponse) {
       status: 'Failed',
       message: 'Recaptcha failed',
     });
-  } catch (error) {
-    res.status(400).json({
-      status: 'Failed',
-      message: 'Something went wrong',
-    });
+  } catch (error: any) {
+    const errorMessage = error instanceof Error ? error.message : 'Something went wrong';
+    const errorResponse: ErrorResponse = { status: 'Failed', message: errorMessage };
+    return res.status(400).json(errorResponse);
   }
 }
 
