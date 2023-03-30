@@ -45,7 +45,7 @@ function fakeLoad() {
     return JSON.parse(jsonData);
   } catch (error) {
     console.log(error);
-    return null;
+    return {};
   }
 }
 
