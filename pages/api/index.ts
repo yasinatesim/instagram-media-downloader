@@ -28,29 +28,18 @@ function fakeSave(data: object) {
     }
     const jsonData = JSON.stringify(data);
     fs.writeFileSync(filePath, jsonData);
-  })
+  });
 }
 
-function fakeExists() : any {
+function fakeExists(): any {
   // here you would check if the data exists
   const filePath = process.cwd() + '/session.json';
-  return fs.chmod(filePath, '777', (err) => {
-    if (err) {
-      console.log(err);
-    }
-    return fs.existsSync(filePath);
-  });
+  return fs.existsSync(filePath);
 }
 
 function fakeLoad() {
   // here you would load the data
   const filePath = process.cwd() + '/session.json';
-
-  return fs.chmod(filePath, '777', (err) => {
-    if (err) {
-      console.log(err);
-    }
-
     try {
       const jsonData = fs.readFileSync(filePath, 'utf-8');
       return JSON.parse(jsonData);
@@ -58,8 +47,6 @@ function fakeLoad() {
       console.log(error);
       return null;
     }
-  })
-
 }
 
 async function Index(req: NextApiRequest, res: NextApiResponse<ErrorResponse | { url: string }>) {
