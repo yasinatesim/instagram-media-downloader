@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
 import axios from 'axios';
-import fs from 'fs';
+import * as fs from 'fs';
 import { IgApiClient } from 'instagram-private-api';
 import path from 'path';
 
