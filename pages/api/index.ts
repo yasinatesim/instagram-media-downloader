@@ -3,6 +3,9 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import axios from 'axios';
 import fs from 'fs';
 import { IgApiClient } from 'instagram-private-api';
+import path from 'path';
+
+const filePath = path.resolve(process.cwd(), 'session.json');
 
 type ErrorResponse = {
   status: string;
@@ -21,7 +24,6 @@ function fakeSave(data: object) {
   // here you would save it to a file/database etc.
   // you could save it to a file: writeFile(path, JSON.stringify(data))
 
-  const filePath = process.cwd() + '/session.json';
   return fs.chmod(filePath, '777', (err) => {
     if (err) {
       console.log(err);
@@ -33,20 +35,18 @@ function fakeSave(data: object) {
 
 function fakeExists(): any {
   // here you would check if the data exists
-  const filePath = process.cwd() + '/session.json';
   return fs.existsSync(filePath);
 }
 
 function fakeLoad() {
   // here you would load the data
-  const filePath = process.cwd() + '/session.json';
-    try {
-      const jsonData = fs.readFileSync(filePath, 'utf-8');
-      return JSON.parse(jsonData);
-    } catch (error) {
-      console.log(error);
-      return null;
-    }
+  try {
+    const jsonData = fs.readFileSync(filePath, 'utf-8');
+    return JSON.parse(jsonData);
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
 }
 
 async function Index(req: NextApiRequest, res: NextApiResponse<ErrorResponse | { url: string }>) {
