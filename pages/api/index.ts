@@ -31,7 +31,7 @@ function fakeSave(data: object) {
   })
 }
 
-function fakeExists() {
+function fakeExists() : any {
   // here you would check if the data exists
   const filePath = process.cwd() + '/session.json';
   return fs.chmod(filePath, '777', (err) => {
