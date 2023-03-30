@@ -41,6 +41,8 @@ function Home() {
       }
     } catch (error: any) {
       alert(`API error: ${error.response?.data?.message ?? error.message}`);
+      setFormSubmit(false);
+      setValue('');
     }
   };
 

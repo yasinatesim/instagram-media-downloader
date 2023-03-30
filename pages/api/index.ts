@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
 import axios from 'axios';
+import fs from 'fs';
 import { IgApiClient } from 'instagram-private-api';
 
 type ErrorResponse = {
@@ -15,6 +16,33 @@ const verifyRecaptcha = async (token: string) => {
 
   return axios.post(verificationUrl);
 };
+
+function fakeSave(data: object) {
+  // here you would save it to a file/database etc.
+  // you could save it to a file: writeFile(path, JSON.stringify(data))
+
+  const filePath = './session.json';
+  const jsonData = JSON.stringify(data);
+  fs.writeFileSync(filePath, jsonData);
+}
+
+function fakeExists() {
+  // here you would check if the data exists
+  const filePath = './session.json';
+  return fs.existsSync(filePath);
+}
+
+function fakeLoad() {
+  // here you would load the data
+  try {
+    const filePath = './session.json';
+    const jsonData = fs.readFileSync(filePath, 'utf-8');
+    return JSON.parse(jsonData);
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
 
 async function Index(req: NextApiRequest, res: NextApiResponse<ErrorResponse | { url: string }>) {
   const { token, username } = req.body;
@@ -33,21 +61,27 @@ async function Index(req: NextApiRequest, res: NextApiResponse<ErrorResponse | {
       ig.state.adid = process.env.NEXT_PUBLIC_IG_ADID as string;
       ig.state.build = process.env.NEXT_PUBLIC_IG_BUILD as string;
 
-      const auth = await ig.account.login(
-        process.env.NEXT_PUBLIC_IG_USERNAME as string,
-        process.env.NEXT_PUBLIC_IG_PASSWORD as string
-      );
-      if (auth) {
-        const { url } = (await ig.user.info(await ig.user.getIdByUsername(username))).hd_profile_pic_url_info;
-        return res.status(200).json({ url });
+      if (fakeExists()) {
+        await ig.state.deserialize(fakeLoad());
+      } else {
+        await ig.account.login(
+          process.env.NEXT_PUBLIC_IG_USERNAME as string,
+          process.env.NEXT_PUBLIC_IG_PASSWORD as string
+        );
+        const serialized = await ig.state.serialize();
+        delete serialized.constants; // this deletes the version info, so you'll always use the version provided by the library
+        fakeSave(serialized);
       }
+
+      const { url } = (await ig.user.info(await ig.user.getIdByUsername(username))).hd_profile_pic_url_info;
+      return res.status(200).json({ url });
     }
 
     return res.status(400).json({
       status: 'Failed',
       message: 'Recaptcha failed',
     });
-  } catch (error: any) {
+  } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Something went wrong';
     const errorResponse: ErrorResponse = { status: 'Failed', message: errorMessage };
     return res.status(400).json(errorResponse);
