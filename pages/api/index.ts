@@ -21,28 +21,45 @@ function fakeSave(data: object) {
   // here you would save it to a file/database etc.
   // you could save it to a file: writeFile(path, JSON.stringify(data))
 
-  const filePath = './session.json';
-  const jsonData = JSON.stringify(data);
-  fs.writeFileSync(filePath, jsonData);
+  const filePath = process.cwd() + '/session.json';
+  return fs.chmod(filePath, '777', (err) => {
+    if (err) {
+      console.log(err);
+    }
+    const jsonData = JSON.stringify(data);
+    fs.writeFileSync(filePath, jsonData);
+  })
 }
 
 function fakeExists() {
   // here you would check if the data exists
-  const filePath = './session.json';
-  fs.chmodSync(filePath, '777');
-  return fs.existsSync(filePath);
+  const filePath = process.cwd() + '/session.json';
+  return fs.chmod(filePath, '777', (err) => {
+    if (err) {
+      console.log(err);
+    }
+    return fs.existsSync(filePath);
+  });
 }
 
 function fakeLoad() {
   // here you would load the data
-  try {
-    const filePath = './session.json';
-    const jsonData = fs.readFileSync(filePath, 'utf-8');
-    return JSON.parse(jsonData);
-  } catch (error) {
-    console.log(error);
-    return null;
-  }
+  const filePath = process.cwd() + '/session.json';
+
+  return fs.chmod(filePath, '777', (err) => {
+    if (err) {
+      console.log(err);
+    }
+
+    try {
+      const jsonData = fs.readFileSync(filePath, 'utf-8');
+      return JSON.parse(jsonData);
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  })
+
 }
 
 async function Index(req: NextApiRequest, res: NextApiResponse<ErrorResponse | { url: string }>) {
