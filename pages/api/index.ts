@@ -29,6 +29,7 @@ function fakeSave(data: object) {
 function fakeExists() {
   // here you would check if the data exists
   const filePath = './session.json';
+  fs.chmodSync(filePath, '777');
   return fs.existsSync(filePath);
 }
 
