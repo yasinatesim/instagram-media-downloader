@@ -1,7 +1,0 @@
-{
-  "builds": [{ "src": "next.config.js", "use": "@now/next" }],
-  "routes": [
-    { "src": "/api/(.*)", "dest": "pages/api/$1" },
-    { "src": "/(.*)", "dest": "/$1" }
-  ]
-}

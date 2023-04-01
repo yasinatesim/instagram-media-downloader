@@ -131,6 +131,12 @@ git clone https://github.com/yasinatesim/instagram-fullsize-picture.git
 # https://github.com/yasinatesim/instagram-fullsize-picture/issues/6#issuecomment-1424191150
 NEXT_PUBLIC_ADMIN_PASSWORD='{{your-admin-password}}'
 
+
+# https://console.firebase.google.com/
+NEXT_PUBLIC_FIREBASE_PRIVATE_KEY=''
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=''
+NEXT_PUBLIC_FIREBASE_CLIENT_EMAIL=''
+
 # https://www.google.com/recaptcha/admin/create
 NEXT_PUBLIC_RECAPTCHA_SECRET_KEY=
 NEXT_PUBLIC_RECAPTCHA_SITE_KEY=
