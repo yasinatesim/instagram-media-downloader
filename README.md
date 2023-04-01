@@ -132,7 +132,7 @@ git clone https://github.com/yasinatesim/instagram-fullsize-picture.git
 NEXT_PUBLIC_ADMIN_PASSWORD='{{your-admin-password}}'
 
 
-# https://console.firebase.google.com/
+# Your Firebase - Firestore Database info -> https://console.firebase.google.com/
 NEXT_PUBLIC_FIREBASE_PRIVATE_KEY=''
 NEXT_PUBLIC_FIREBASE_PROJECT_ID=''
 NEXT_PUBLIC_FIREBASE_CLIENT_EMAIL=''
