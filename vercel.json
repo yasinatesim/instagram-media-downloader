@@ -1,0 +1,6 @@
+{
+  "builds": [{ "src": "package.json", "use": "@now/next" }],
+  "routes": [
+    { "src": "/api/(.*)", "dest": "pages/api/$1" }
+  ]
+}
