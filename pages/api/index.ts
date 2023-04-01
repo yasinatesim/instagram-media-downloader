@@ -1,11 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
 import axios from 'axios';
-import * as fs from 'fs';
 import { IgApiClient } from 'instagram-private-api';
-import path from 'path';
 
-const filePath = path.resolve(process.cwd(), 'session.json');
+import db  from '@/configs/db';
 
 type ErrorResponse = {
   status: string;
@@ -20,29 +18,32 @@ const verifyRecaptcha = async (token: string) => {
   return axios.post(verificationUrl);
 };
 
-function fakeSave(data: object) {
-  // here you would save it to a file/database etc.
-  // you could save it to a file: writeFile(path, JSON.stringify(data))
-
-  return fs.chmod(filePath, '777', (err) => {
-    if (err) {
-      console.log(err);
-    }
-    const jsonData = JSON.stringify(data);
-    fs.writeFileSync(filePath, jsonData);
-  });
-}
-
-function fakeExists(): any {
-  // here you would check if the data exists
-  return fs.existsSync(filePath);
-}
-
-function fakeLoad() {
-  // here you would load the data
+async function fakeSave(data: object) {
   try {
-    const jsonData = fs.readFileSync(filePath, 'utf-8');
-    return JSON.parse(jsonData);
+    const options = { ignoreUndefinedProperties: true } as any;
+    await db.collection('data').doc('session').set(data, options);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+async function fakeExists() {
+  try {
+    const doc = await db.collection('data').doc('session').get();
+    return doc.exists;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
+async function fakeLoad() {
+  try {
+    const doc = await db.collection('data').doc('session').get();
+    if (doc.exists) {
+      return doc.data();
+    }
+    return {};
   } catch (error) {
     console.log(error);
     return {};
@@ -66,8 +67,8 @@ async function Index(req: NextApiRequest, res: NextApiResponse<ErrorResponse | {
       ig.state.adid = process.env.NEXT_PUBLIC_IG_ADID as string;
       ig.state.build = process.env.NEXT_PUBLIC_IG_BUILD as string;
 
-      if (fakeExists()) {
-        await ig.state.deserialize(fakeLoad());
+      if (await fakeExists()) {
+        await ig.state.deserialize(await fakeLoad());
       } else {
         await ig.account.login(
           process.env.NEXT_PUBLIC_IG_USERNAME as string,
@@ -75,7 +76,7 @@ async function Index(req: NextApiRequest, res: NextApiResponse<ErrorResponse | {
         );
         const serialized = await ig.state.serialize();
         delete serialized.constants; // this deletes the version info, so you'll always use the version provided by the library
-        fakeSave(serialized);
+        await fakeSave(serialized);
       }
 
       const { url } = (await ig.user.info(await ig.user.getIdByUsername(username))).hd_profile_pic_url_info;
