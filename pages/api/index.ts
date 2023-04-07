@@ -1,9 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
 import axios from 'axios';
-import { IgApiClient } from 'instagram-private-api';
+import { IgApiClient, IgLoginRequiredError } from 'instagram-private-api';
 
-import db  from '@/configs/db';
+import db from '@/configs/db';
 
 type ErrorResponse = {
   status: string;
@@ -50,8 +50,22 @@ async function fakeLoad() {
   }
 }
 
+async function fakeDelete() {
+  try {
+    await db.collection('data').doc('session').delete();
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 async function Index(req: NextApiRequest, res: NextApiResponse<ErrorResponse | { url: string }>) {
   const { token, username } = req.body;
+
+  await sleep(10000)
 
   try {
     // Recaptcha response
@@ -89,6 +103,16 @@ async function Index(req: NextApiRequest, res: NextApiResponse<ErrorResponse | {
     });
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Something went wrong';
+
+    if (error instanceof IgLoginRequiredError) {
+      await fakeDelete();
+
+      return res.status(400).json({
+        status: 'Failed',
+        message: 'Session expired, please try again',
+      });
+    }
+
     const errorResponse: ErrorResponse = { status: 'Failed', message: errorMessage };
     return res.status(400).json(errorResponse);
   }

@@ -5,30 +5,32 @@ import Head from 'next/head';
 
 import axios from 'axios';
 
+import { IconLoading } from '@/assets/icons';
+
 function Home() {
   const { executeRecaptcha } = useGoogleReCaptcha();
 
   const [value, setValue] = useState('');
-  const [formSubmit, setFormSubmit] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
   };
 
   const handleSubmit = async () => {
-    if (!executeRecaptcha) {
+    if (!executeRecaptcha || isLoading) {
       return;
     }
 
     try {
+      setIsLoading(true);
+
       const token = await executeRecaptcha();
       if (!token) {
-        return;
+        throw new Error('Unable to retrieve reCAPTCHA token.');
       }
 
       if (value !== '') {
-        setFormSubmit(true);
-
         const res = await axios.post(`${process.env.NEXT_PUBLIC_APP_URL}/api`, {
           username: value,
           token,
@@ -36,13 +38,12 @@ function Home() {
         const { url } = await res.data;
         window.location.href = url;
 
-        setFormSubmit(false);
         setValue('');
       }
     } catch (error: any) {
       alert(`API error: ${error.response?.data?.message ?? error.message}`);
-      setFormSubmit(false);
-      setValue('');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -51,6 +52,7 @@ function Home() {
       handleSubmit();
     }
   };
+
   return (
     <>
       <Head>
@@ -67,83 +69,18 @@ function Home() {
             id="text"
             onChange={onChange}
             onKeyDown={onKeyDown}
-            disabled={formSubmit}
+            disabled={isLoading}
             value={value}
           />
           <label htmlFor="text" title="Enter Instagram Username" data-title="Username" />
           <button
             type="button"
-            className={`form-btn ${formSubmit ? 'loading-start' : ''}`}
+            className={`form-btn ${isLoading ? 'loading-start' : ''}`}
             onClick={handleSubmit}
-            disabled={formSubmit}
+            disabled={isLoading}
           >
             <span>Submit</span>
-            <svg
-              id="Layer_1"
-              xmlns="http://www.w3.org/2000/svg"
-              xmlnsXlink="http://www.w3.org/1999/xlink"
-              x="0px"
-              y="0px"
-              width="20px"
-              height="26px"
-              viewBox="0 0 24 30"
-              xmlSpace="preserve"
-            >
-              <rect x={0} y={13} width={4} height={5} fill="#333">
-                <animate
-                  attributeName="height"
-                  attributeType="XML"
-                  values="5;21;5"
-                  begin="0s"
-                  dur="0.6s"
-                  repeatCount="indefinite"
-                />
-                <animate
-                  attributeName="y"
-                  attributeType="XML"
-                  values="13; 5; 13"
-                  begin="0s"
-                  dur="0.6s"
-                  repeatCount="indefinite"
-                />
-              </rect>
-              <rect x={10} y={13} width={4} height={5} fill="#333">
-                <animate
-                  attributeName="height"
-                  attributeType="XML"
-                  values="5;21;5"
-                  begin="0.15s"
-                  dur="0.6s"
-                  repeatCount="indefinite"
-                />
-                <animate
-                  attributeName="y"
-                  attributeType="XML"
-                  values="13; 5; 13"
-                  begin="0.15s"
-                  dur="0.6s"
-                  repeatCount="indefinite"
-                />
-              </rect>
-              <rect x={20} y={13} width={4} height={5} fill="#333">
-                <animate
-                  attributeName="height"
-                  attributeType="XML"
-                  values="5;21;5"
-                  begin="0.3s"
-                  dur="0.6s"
-                  repeatCount="indefinite"
-                />
-                <animate
-                  attributeName="y"
-                  attributeType="XML"
-                  values="13; 5; 13"
-                  begin="0.3s"
-                  dur="0.6s"
-                  repeatCount="indefinite"
-                />
-              </rect>
-            </svg>
+            <IconLoading />
           </button>
         </div>
       </div>
