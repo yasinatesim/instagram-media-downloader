@@ -31,7 +31,7 @@ function Home() {
       }
 
       if (value !== '') {
-        const res = await axios.post(`${process.env.NEXT_PUBLIC_APP_URL}/api`, {
+        const res = await axios.post(`/api`, {
           username: value,
           token,
         });
