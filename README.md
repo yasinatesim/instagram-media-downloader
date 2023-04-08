@@ -128,35 +128,35 @@ git clone https://github.com/yasinatesim/instagram-fullsize-picture.git
 2. Add .env file on root
 
 ```bash
-# https://github.com/yasinatesim/instagram-fullsize-picture/issues/6#issuecomment-1424191150
+# There is an `encrypt` function in the project, please follow https://github.com/yasinatesim/instagram-fullsize-picture/issues/6#issuecomment-1424191150
 NEXT_PUBLIC_ADMIN_PASSWORD='{{your-admin-password}}'
-
 
 # Your Firebase - Firestore Database info -> https://console.firebase.google.com/
 NEXT_PUBLIC_FIREBASE_PRIVATE_KEY=''
 NEXT_PUBLIC_FIREBASE_PROJECT_ID=''
 NEXT_PUBLIC_FIREBASE_CLIENT_EMAIL=''
 
+# You need Google Recaptcha token for below field and you should add *localhost* domain in Google Recaptcha console "Domains" section
 # https://www.google.com/recaptcha/admin/create
 NEXT_PUBLIC_RECAPTCHA_SECRET_KEY=
 NEXT_PUBLIC_RECAPTCHA_SITE_KEY=
 
-NEXT_PUBLIC_IG_USERNAME={{YOUR-INSTAGRAM-USERNAME}}
+# You need an Instagram account, please enter your Instagram account Username and Password
+NEXT_PUBLIC_IG_USERNAME=
+NEXT_PUBLIC_IG_PASSWORD=
 
-NEXT_PUBLIC_IG_PASSWORD={{YOUR-INSTAGRAM-PASSWORD}}
+# You need Instagram device string, please choose one on this link -> https://github.com/dilame/instagram-private-api/blob/623a348343e34058c3a286693740aa3698aed3cc/src/samples/devices.json
+NEXT_PUBLIC_IG_DEVICE_STRING=
 
-NEXT_PUBLIC_IG_DEVICE_STRING={{YOUR-IG_DEVICE_STRING}}
+# The project uses to dilame/instagram-private-api.The library has `generateDevice` function and the function return the below fields. Please run this function in the dilame/instagram-private-api project and enter the below fields
 
 # https://github.com/dilame/instagram-private-api/blob/623a348343e34058c3a286693740aa3698aed3cc/src/core/state.ts#L245
-NEXT_PUBLIC_IG_DEVICE_ID={{YOUR-IG-DEVICE-ID}}
+NEXT_PUBLIC_IG_DEVICE_ID=
+NEXT_PUBLIC_IG_UUID=
+NEXT_PUBLIC_IG_PHONE_ID=
+NEXT_PUBLIC_IG_ADID=
+NEXT_PUBLIC_IG_BUILD=
 
-NEXT_PUBLIC_IG_UUID={{IG-UUID}}
-
-NEXT_PUBLIC_IG_PHONE_ID={{IG-PHONE-ID}}
-
-NEXT_PUBLIC_IG_ADID={{IG-ADID}}
-
-NEXT_PUBLIC_IG_BUILD={{IG-BUILD}}
 ```
 
 
