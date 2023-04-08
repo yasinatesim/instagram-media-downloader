@@ -65,57 +65,57 @@ function sleep(ms: number) {
 async function Index(req: NextApiRequest, res: NextApiResponse<ErrorResponse | { url: string }>) {
   const { token, username } = req.body;
 
-  await sleep(10000)
+  return await sleep(5000).then(async () => {
+    try {
+      // Recaptcha response
+      const response = await verifyRecaptcha(token);
 
-  try {
-    // Recaptcha response
-    const response = await verifyRecaptcha(token);
+      if (response.data.success && response.data.score >= 0.5) {
+        const ig = new IgApiClient();
 
-    if (response.data.success && response.data.score >= 0.5) {
-      const ig = new IgApiClient();
+        ig.state.deviceString = process.env.NEXT_PUBLIC_IG_DEVICE_STRING as string;
+        ig.state.deviceId = process.env.NEXT_PUBLIC_IG_DEVICE_ID as string;
+        ig.state.uuid = process.env.NEXT_PUBLIC_IG_UUID as string;
+        ig.state.phoneId = process.env.NEXT_PUBLIC_IG_PHONE_ID as string;
+        ig.state.adid = process.env.NEXT_PUBLIC_IG_ADID as string;
+        ig.state.build = process.env.NEXT_PUBLIC_IG_BUILD as string;
 
-      ig.state.deviceString = process.env.NEXT_PUBLIC_IG_DEVICE_STRING as string;
-      ig.state.deviceId = process.env.NEXT_PUBLIC_IG_DEVICE_ID as string;
-      ig.state.uuid = process.env.NEXT_PUBLIC_IG_UUID as string;
-      ig.state.phoneId = process.env.NEXT_PUBLIC_IG_PHONE_ID as string;
-      ig.state.adid = process.env.NEXT_PUBLIC_IG_ADID as string;
-      ig.state.build = process.env.NEXT_PUBLIC_IG_BUILD as string;
+        if (await fakeExists()) {
+          await ig.state.deserialize(await fakeLoad());
+        } else {
+          await ig.account.login(
+            process.env.NEXT_PUBLIC_IG_USERNAME as string,
+            process.env.NEXT_PUBLIC_IG_PASSWORD as string
+          );
+          const serialized = await ig.state.serialize();
+          delete serialized.constants; // this deletes the version info, so you'll always use the version provided by the library
+          await fakeSave(serialized);
+        }
 
-      if (await fakeExists()) {
-        await ig.state.deserialize(await fakeLoad());
-      } else {
-        await ig.account.login(
-          process.env.NEXT_PUBLIC_IG_USERNAME as string,
-          process.env.NEXT_PUBLIC_IG_PASSWORD as string
-        );
-        const serialized = await ig.state.serialize();
-        delete serialized.constants; // this deletes the version info, so you'll always use the version provided by the library
-        await fakeSave(serialized);
+        const { url } = (await ig.user.info(await ig.user.getIdByUsername(username))).hd_profile_pic_url_info;
+        return res.status(200).json({ url });
       }
-
-      const { url } = (await ig.user.info(await ig.user.getIdByUsername(username))).hd_profile_pic_url_info;
-      return res.status(200).json({ url });
-    }
-
-    return res.status(400).json({
-      status: 'Failed',
-      message: 'Recaptcha failed',
-    });
-  } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : 'Something went wrong';
-
-    if (error instanceof IgLoginRequiredError) {
-      await fakeDelete();
 
       return res.status(400).json({
         status: 'Failed',
-        message: 'Session expired, please try again',
+        message: 'Recaptcha failed',
       });
-    }
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Something went wrong';
 
-    const errorResponse: ErrorResponse = { status: 'Failed', message: errorMessage };
-    return res.status(400).json(errorResponse);
-  }
+      if (error instanceof IgLoginRequiredError) {
+        await fakeDelete();
+
+        return res.status(400).json({
+          status: 'Failed',
+          message: 'Session expired, please try again',
+        });
+      }
+
+      const errorResponse: ErrorResponse = { status: 'Failed', message: errorMessage };
+      return res.status(400).json(errorResponse);
+    }
+  });
 }
 
 export default Index;
