@@ -112,6 +112,15 @@ async function Index(req: NextApiRequest, res: NextApiResponse<ErrorResponse | {
         });
       }
 
+      if (errorMessage.includes('few minutes before')) {
+        await fakeDelete();
+
+        return res.status(400).json({
+          status: 'Failed',
+          message: errorMessage,
+        });
+      }
+
       const errorResponse: ErrorResponse = { status: 'Failed', message: errorMessage };
       return res.status(400).json(errorResponse);
     }
