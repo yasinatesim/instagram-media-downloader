@@ -103,16 +103,11 @@ async function Index(req: NextApiRequest, res: NextApiResponse<ErrorResponse | {
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Something went wrong';
 
-      if (error instanceof IgLoginRequiredError) {
-        await fakeDelete();
-
-        return res.status(400).json({
-          status: 'Failed',
-          message: 'Session expired, please try again',
-        });
-      }
-
-      if (errorMessage.includes('few minutes before')) {
+      /**
+        * login_required error
+        * "Please wait a few minutes before you try again." error
+      */
+      if (error instanceof IgLoginRequiredError || errorMessage.includes('few minutes before')) {
         await fakeDelete();
 
         return res.status(400).json({
