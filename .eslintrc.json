@@ -1,0 +1,37 @@
+{
+  "extends": "next/core-web-vitals",
+  "plugins": ["simple-import-sort"],
+  "rules": {
+    "import/no-anonymous-default-export": "off",
+    "simple-import-sort/imports": "error",
+    "simple-import-sort/exports": "error"
+  },
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx"],
+      "rules": {
+        "simple-import-sort/imports": [
+          "error",
+          {
+            "groups": [
+              ["^react"],
+              ["^next"],
+              ["^@?\\w"],
+              ["^(@/assets/icons)(/.*|$)"],
+              ["^(@/assets/images)(/.*|$)"],
+              ["^(@/data)(/.*|$)"],
+              ["^(@/hooks)(/.*|$)"],
+              ["^(@/services)(/.*|$)"],
+              ["^(@/store)(/.*|$)"],
+              ["^(@/components)(/.*|$)"],
+              ["^\\u0000"],
+              ["^\\.\\.(?!/?$)", "^\\.\\./?$"],
+              ["^\\./(?=.*/)(?!/?$)", "^\\.(?!/?$)", "^\\./?$"],
+              ["^.+\\.?(scss)$"]
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

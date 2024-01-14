@@ -1,0 +1,7 @@
+
+.git
+.results
+*Dockerfile*
+node_modules
+.env
+.next

@@ -1,0 +1,7 @@
+
+**/.next/**
+**/dist/**
+**/tmp/**
+*.json
+*.md
+.yaml

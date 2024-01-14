@@ -1,0 +1,29 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.info {
+  margin-top: 2vh;
+  max-width: 70px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-top: 2vh;
+  text-align: center;
+}
+
+.description {
+  font-size: 14px;
+  font-weight: 400;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  max-height: 14vh;
+  opacity: 0.8;
+  overflow: auto;
+  text-align: center;
+}

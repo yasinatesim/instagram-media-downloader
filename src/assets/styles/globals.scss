@@ -1,0 +1,21 @@
+// fonts
+:root {
+  --font-family-default: Gotham, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell,
+    Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
+
+// colors
+:root {
+  --color-code-red: #f40000;
+  --color-code-white: #fff;
+  --color-code-black: #1d1e1c;
+  --color-code-gray: #eceeef;
+
+  --color-code-darkgreen: #009639;
+  --color-code-orange: #ff8300;
+  --color-code-yellow: #f1de02;
+}
+
+a {
+  color: inherit;
+}
