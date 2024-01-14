@@ -3,6 +3,7 @@
   "plugins": ["simple-import-sort"],
   "rules": {
     "import/no-anonymous-default-export": "off",
+    "@next/next/no-img-element": "off",
     "simple-import-sort/imports": "error",
     "simple-import-sort/exports": "error"
   },
