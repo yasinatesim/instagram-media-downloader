@@ -9,7 +9,7 @@ import styles from './Home.module.scss';
 
 const Home: React.FC = () => {
   // const [url, setUrl] = useState('https://www.instagram.com/stories/deryaulugg/3279384278947054768/');
-  const [url, setUrl] = useState('https://www.instagram.com/p/C1zfUJMIxA0/');
+  const [url, setUrl] = useState('https://www.instagram.com/p/C1m0389NMlg/');
   const [generatedUrl, setGeneratedUrl] = useState('');
   const [jsonInput, setJsonInput] = useState('');
   const [processedData, setProcessedData] = useState<any>(null);
@@ -35,24 +35,28 @@ const Home: React.FC = () => {
   };
 
   if (processedData) {
-    const parsedData = JSON.parse(processedData);
+		const parsedData = JSON.parse(processedData);
 
     if (parsedData.items[0].carousel_media) {
       return (
         <>
-          {parsedData.items[0].carousel_media.map((image: any, key: string) => (
-            <img
-              crossOrigin="anonymous"
-              key={`${image.image_versions2.candidates[0].url} ${key}`}
-              width={300}
-              src={image.image_versions2.candidates[0].url}
-              alt={`Image ${key}`}
-            />
-          ))}
+          {parsedData.items[0].carousel_media.map((item: any, key: string) => (
+           <>
+           	 <img
+	              crossOrigin="anonymous"
+	              key={`${item.image_versions2.candidates[0].url} ${key}`}
+	              width={300}
+	              src={item.image_versions2.candidates[0].url}
+	              alt={`Image ${key}`}
+	            />
+						{item.video_versions && <video autoPlay src={item.video_versions[0].url}></video>}
+           </>
+					))}
+
+
         </>
       );
     } else {
-
       return (
         <>
           <img
@@ -61,7 +65,9 @@ const Home: React.FC = () => {
             width={300}
             src={parsedData.items[0].image_versions2.candidates[0].url}
             alt={`Image`}
-          />
+					/>
+
+					{parsedData.items[0].video_versions && <video autoPlay src={parsedData.items[0].video_versions[0].url}></video>}
         </>
       );
     }
