@@ -1,5 +1,7 @@
 import React from 'react';
 
+import cx from 'classnames';
+
 import IconImage from '@/assets/icons/icon-image.svg';
 import IconVideo from '@/assets/icons/icon-video.svg';
 import IconVideoPreview from '@/assets/icons/icon-video-preview.svg';
@@ -27,7 +29,13 @@ const Card: React.FC<Props> = ({ index, imageUrl, hasVideo, videoUrl }) => {
           </a>
         )}
 
-        <a href={imageUrl} target="_blank" className={styles.image}>
+        <a
+          href={imageUrl}
+          target="_blank"
+          className={cx(styles.image, {
+            [styles.hasVideo]: hasVideo,
+          })}
+        >
           <img crossOrigin="anonymous" width={300} src={imageUrl} alt={`Image ${imageUrl}`} />
           <div className={styles.icon}>{hasVideo ? <IconVideoPreview /> : <IconImage />}</div>
         </a>

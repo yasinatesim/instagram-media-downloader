@@ -15,6 +15,8 @@
   font-size: 18px;
   margin-right: 12px;
 	display: none;
+  min-width: 30px;
+
 
   @media (min-width: 768px) {
     display: inline;
@@ -27,7 +29,7 @@
   display: inline-block;
 }
 
-.video {
+.hasVideo {
   @media (min-width: 768px) {
     margin-left: 6px;
   }
@@ -37,6 +39,6 @@
   position: absolute;
   top: 5px;
   right: 5px;
-  color: #fff;
+  color: #b7dde9;
   font-size: 22px;
 }

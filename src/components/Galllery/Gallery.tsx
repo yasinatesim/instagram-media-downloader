@@ -40,7 +40,7 @@ const Gallery = ({ result }: Props) => {
             index={key + 1}
             imageUrl={item?.image_versions2.candidates[0]?.url}
             hasVideo={item?.video_versions}
-            videoUrl={item?.video_versions[0]?.url}
+            videoUrl={item?.video_versions?.[0]?.url}
           />
         ))}
       </div>

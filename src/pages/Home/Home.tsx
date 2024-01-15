@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 
 import {
   INSTAGRAM_POSTPAGE_REGEX,
@@ -12,6 +12,7 @@ import { INSTAGRAM_GRAPHQL_URL, INSTAGRAM_PROFILE_URL, INSTAGRAM_URL_PARAMS } fr
 import { useCopyToClipboard } from '@/hooks';
 
 import Gallery from '@/components/Galllery/Gallery';
+import HowToUse from '@/components/HowToUse';
 import Input from '@/components/Input';
 import TextArea from '@/components/TextArea';
 
@@ -39,7 +40,11 @@ const Home: React.FC = () => {
   const handleUrlChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUrl(event.target.value);
 
-    const url = event.target.value;
+    const inputValue = event.target.value;
+    const urlObj = new URL(inputValue);
+    urlObj.search = '';
+
+    const url = urlObj.toString();
 
     if (!url) {
       toast.error('Please provide a URL');
@@ -122,6 +127,8 @@ const Home: React.FC = () => {
         Paste the JSON data into the input below. You will then be redirected to result page 🎉
       </div>
       <TextArea placeholder="Paste JSON Data" onChange={handleJsonPaste} value={jsonInput} />
+
+      <HowToUse />
     </div>
   );
 };
