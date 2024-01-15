@@ -16,20 +16,14 @@ type Props = {
 };
 
 const Card: React.FC<Props> = ({ index, imageUrl, hasVideo, videoUrl }) => {
-
-
   const [base64Image, setBase64Image] = useState(null);
 
-  // Resmi base64'e çevirme fonksiyonu
   const urlToBase64 = async (url: string) => {
     try {
-      // Resmi fetch ile al
       const response = await fetch(url);
 
-      // Response'un içeriğini blob olarak al
       const blob = await response.blob();
 
-      // Blob'u base64'e çevir
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onloadend = () => resolve(reader.result);
@@ -43,7 +37,6 @@ const Card: React.FC<Props> = ({ index, imageUrl, hasVideo, videoUrl }) => {
   };
 
   useEffect(() => {
-    // Base64'e çevrilen resmi al
     urlToBase64(imageUrl)
       .then((base64Image) => {
         setBase64Image(base64Image as any);
@@ -52,7 +45,6 @@ const Card: React.FC<Props> = ({ index, imageUrl, hasVideo, videoUrl }) => {
         console.error('Error:', error);
       });
   }, [imageUrl]);
-
 
   return (
     <div className={styles.container}>
