@@ -11,7 +11,7 @@ import { INSTAGRAM_GRAPHQL_URL, INSTAGRAM_PROFILE_URL, INSTAGRAM_URL_PARAMS } fr
 
 import { useCopyToClipboard } from '@/hooks';
 
-import Card from '@/components/Card/Card';
+import Gallery from '@/components/Galllery/Gallery';
 import Input from '@/components/Input';
 import TextArea from '@/components/TextArea';
 
@@ -78,49 +78,18 @@ const Home: React.FC = () => {
   if (processedData) {
     const parsedData = JSON.parse(processedData);
 
-    if (parsedData?.data?.reels_media) {
-      return (
-        <>
-          {parsedData?.data?.reels_media?.[0].items.map((item: any, key: string) => (
-            <Card
-              key={key}
-              imageUrl={item?.display_url}
-              hasVideo={item?.video_resources}
-              videoUrl={item?.video_resources?.[0]?.src}
-            />
-          ))}
-        </>
-      );
-    }
-
-    if (parsedData?.items?.[0]?.carousel_media) {
-      return (
-        <>
-          {parsedData.items?.[0].carousel_media.map((item: any, key: string) => (
-            <Card
-              key={key}
-              imageUrl={item?.image_versions2.candidates[0]?.url}
-              hasVideo={item?.video_versions}
-              videoUrl={item?.video_versions[0]?.url}
-            />
-          ))}
-        </>
-      );
-    } else {
-      return (
-        <Card
-          imageUrl={parsedData?.items?.[0]?.image_versions2?.candidates?.[0]?.url}
-          hasVideo={parsedData?.items?.[0]?.video_versions}
-          videoUrl={parsedData?.items?.[0]?.video_versions?.[0].url}
-        />
-      );
-    }
+    return <Gallery result={parsedData} />;
   }
 
   return (
-    <div className={styles.container}>
+    <div className="container">
+      <h2>Instagram Private Downloader</h2>
+      <div className={styles.description}>Please enter Instagram story or reels or post url</div>
       <Input placeholder="Enter URL" value={url} onChange={handleUrlChange} />
 
+      <div className={styles.description}>
+        Copy the generated link and open it in a new tab. Then copy the JSON output from the tab
+      </div>
       <Input
         placeholder="Generated URL"
         value={generatedUrl}
@@ -132,8 +101,12 @@ const Home: React.FC = () => {
 
       {url.includes('stories') && (
         <>
+          <div className={styles.description}>Paste JSON data in the below input</div>
           <TextArea placeholder="Paste JSON Data" onChange={handleStoriesUrlChange} value={storiesUrl} />
 
+          <div className={styles.description}>
+            Copy the generated link and open it in a new tab. Then copy the JSON output from the tab
+          </div>
           <Input
             placeholder="Generated URL"
             value={generatedStoriesUrl}
@@ -145,6 +118,9 @@ const Home: React.FC = () => {
         </>
       )}
 
+      <div className={styles.description}>
+        Paste the JSON data into the input below. You will then be redirected to result page 🎉
+      </div>
       <TextArea placeholder="Paste JSON Data" onChange={handleJsonPaste} value={jsonInput} />
     </div>
   );

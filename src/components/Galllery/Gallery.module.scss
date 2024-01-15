@@ -1,0 +1,35 @@
+.container {
+  max-width: 750px;
+  margin: auto;
+  padding: 20px;
+}
+
+.icon {
+	display: flex;
+	align-items: center;
+	font-size: 18px;
+	margin-right: 12px;
+}
+
+.description {
+	display: flex;
+	align-items: center;
+	line-height: 1.4;
+	border-bottom: 1px solid #ddd;
+	padding-top: 4px;
+	padding-bottom: 4px;
+
+
+	&:last-of-type {
+		margin-bottom: 12px;
+	}
+
+	svg {
+    margin-left: 12px;
+  }
+
+  strong {
+    margin-left: 4px;
+    margin-right: 4px;
+  }
+}
