@@ -1,204 +1,153 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import toast, { Toaster } from 'react-hot-toast';
 
-import IconCopy from '@/assets/icons/icon-copy.svg';
+import {
+  INSTAGRAM_POSTPAGE_REGEX,
+  INSTAGRAM_REELSPAGE_REGEX,
+  INSTAGRAM_USERNAME_REGEX_FOR_STORIES,
+} from '@/constants/regexes';
+import { INSTAGRAM_GRAPHQL_URL, INSTAGRAM_PROFILE_URL, INSTAGRAM_URL_PARAMS } from '@/constants/urls';
 
-import { getGeneratedUrlData } from '@/services/generate-url';
+import { useCopyToClipboard } from '@/hooks';
+
+import Card from '@/components/Card/Card';
+import Input from '@/components/Input';
+import TextArea from '@/components/TextArea';
 
 import styles from './Home.module.scss';
 
 const Home: React.FC = () => {
-  const [url, setUrl] = useState('https://www.instagram.com/stories/emreyucelen/3279503570960145858/');
-  // const [url, setUrl] = useState('https://www.instagram.com/p/C1m0389NMlg/');
+  const { isCopied, copyToClipboard } = useCopyToClipboard();
+
+  const [url, setUrl] = useState('');
   const [generatedUrl, setGeneratedUrl] = useState('');
   const [generatedStoriesUrl, setGeneratedStoriesUrl] = useState('');
   const [jsonInput, setJsonInput] = useState('');
-  const [processedData, setProcessedData] = useState<any>(null);
-
   const [storiesUrl, setStoriesUrl] = useState('');
 
-  const handleUrlChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setUrl(event.target.value);
-  };
+  const [processedData, setProcessedData] = useState<any>(null);
 
-	const handleStoriesUrlChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setStoriesUrl(event.target.value)
+  const handleStoriesUrlChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setStoriesUrl(event.target.value);
 
     const parsedValue = JSON.parse(event.target.value);
-
-    const url = `https://www.instagram.com/graphql/query/?query_hash=de8017ee0a7c9c45ec4260733d81ea31&variables={"reel_ids":["${parsedValue.graphql.user.id}"],"tag_names":[],"location_ids":[],"highlight_reel_ids":[],"precomposed_overlay":false,"show_story_viewer_list":true,"story_viewer_fetch_count":50,"story_viewer_cursor":""}`;
-
+    const url = INSTAGRAM_GRAPHQL_URL.replace('<USER_ID>', parsedValue.graphql.user.id);
     setGeneratedStoriesUrl(url);
   };
 
-  const handleGenerateUrl = async () => {
-    try {
-      if (!url) {
-        // Handle the case where URL is not provided
-        console.error('Please provide a URL');
-        return;
-      }
+  const handleUrlChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setUrl(event.target.value);
 
-      let finalUrl;
+    const url = event.target.value;
 
-      if (url.includes('instagram')) {
-        // Fetch post and reels
-        if (url.includes('/p/') || url.includes('/reel/')) {
-          finalUrl = `${url}?__a=1&__d=dis`;
-        } else {
-          // Fetch stories
-          const usernameMatch = url.match(/instagram\.com\/stories\/([^/]+)\//);
-          const username = usernameMatch && usernameMatch[1];
+    if (!url) {
+      toast.error('Please provide a URL');
+      return;
+    }
 
-          finalUrl = `https://www.instagram.com/${username}?__a=1&__d=dis`;
-        }
+    let finalUrl;
 
-        // Use the final URL as needed
-        console.log('Final URL:', finalUrl);
-
-        // You can set the generated URL state here if needed
-        setGeneratedUrl(finalUrl);
+    if (url.includes('instagram')) {
+      if (url.includes(`${INSTAGRAM_POSTPAGE_REGEX}`) || url.includes(`${INSTAGRAM_REELSPAGE_REGEX}`)) {
+        finalUrl = `${url}${INSTAGRAM_URL_PARAMS}`;
       } else {
-        console.error('Invalid URL. Must be an Instagram URL.');
+        const usernameMatch = url.match(INSTAGRAM_USERNAME_REGEX_FOR_STORIES);
+        const username: any = usernameMatch && usernameMatch[1];
+
+        finalUrl = INSTAGRAM_PROFILE_URL.replace('<USER_NAME>', username);
       }
-    } catch (error) {
-      console.error('An error occurred while processing the request:', error);
+
+      setGeneratedUrl(finalUrl);
+    } else {
+      toast.error('Invalid URL. Must be an Instagram URL.');
     }
   };
 
-  const handleJsonPaste = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleJsonPaste = (event: React.ChangeEvent<HTMLInputElement>) => {
     setJsonInput(event.target.value);
     setProcessedData(event.target.value);
   };
 
-  const handleCopyClick = () => {
-    if (generatedUrl) {
-      navigator.clipboard.writeText(generatedUrl);
+  useEffect(() => {
+    if (isCopied) {
+      toast.success('Copied');
     }
-  };
-
-  const handleCoyStoriesUrl = () => {
-    if (generatedStoriesUrl) {
-      navigator.clipboard.writeText(generatedStoriesUrl);
-    }
-  };
+  }, [isCopied]);
 
   if (processedData) {
     const parsedData = JSON.parse(processedData);
 
-
-    // for stories
-    if (parsedData.data.reels_media) {
+    if (parsedData?.data?.reels_media) {
       return (
         <>
-        {parsedData.data.reels_media[0].items.map((item: any, key: string) => (
-          <>
-            <img
-              crossOrigin="anonymous"
-              key={`${item.display_url} ${key}`}
-              width={300}
-              src={item.display_url}
-              alt={`Image ${key}`}
+          {parsedData?.data?.reels_media?.[0].items.map((item: any, key: string) => (
+            <Card
+              key={key}
+              imageUrl={item?.display_url}
+              hasVideo={item?.video_resources}
+              videoUrl={item?.video_resources?.[0]?.src}
             />
-            {item.video_resources && <video autoPlay src={item.video_resources[0].src}></video>}
-          </>
-        ))}
+          ))}
         </>
-      )
-    } else {
+      );
+    }
 
-   // for post & reels
-   if (parsedData.items[0].carousel_media) {
-    return (
-      <>
-        {parsedData.items[0].carousel_media.map((item: any, key: string) => (
-          <>
-            <img
-              crossOrigin="anonymous"
-              key={`${item.image_versions2.candidates[0].url} ${key}`}
-              width={300}
-              src={item.image_versions2.candidates[0].url}
-              alt={`Image ${key}`}
+    if (parsedData?.items?.[0]?.carousel_media) {
+      return (
+        <>
+          {parsedData.items?.[0].carousel_media.map((item: any, key: string) => (
+            <Card
+              key={key}
+              imageUrl={item?.image_versions2.candidates[0]?.url}
+              hasVideo={item?.video_versions}
+              videoUrl={item?.video_versions[0]?.url}
             />
-            {item.video_versions && <video autoPlay src={item.video_versions[0].url}></video>}
-          </>
-        ))}
-      </>
-    );
-  } else {
-    return (
-      <>
-        <img
-          crossOrigin="anonymous"
-          key={`${parsedData.items[0].image_versions2.candidates[0].url}`}
-          width={300}
-          src={parsedData.items[0].image_versions2.candidates[0].url}
-          alt={`Image`}
+          ))}
+        </>
+      );
+    } else {
+      return (
+        <Card
+          imageUrl={parsedData?.items?.[0]?.image_versions2?.candidates?.[0]?.url}
+          hasVideo={parsedData?.items?.[0]?.video_versions}
+          videoUrl={parsedData?.items?.[0]?.video_versions?.[0].url}
         />
-
-        {parsedData.items[0].video_versions && (
-          <video autoPlay src={parsedData.items[0].video_versions[0].url}></video>
-        )}
-      </>
-    );
-  }
-
+      );
     }
   }
 
-  if (!processedData) {
-    return (
-      <div className={styles.container}>
-        <div className={styles.generateInput}>
-          <input type="text" placeholder="Enter URL" value={url} onChange={handleUrlChange} className={styles.input} />
-          <button className={styles.button} onClick={handleGenerateUrl} disabled={!url}>
-            Generate URL
-          </button>
-        </div>
+  return (
+    <div className={styles.container}>
+      <Input placeholder="Enter URL" value={url} onChange={handleUrlChange} />
 
-        <div className={styles.copyInput}>
-          <input type="text" placeholder="Generated URL" value={generatedUrl} className={styles.input} readOnly />
-          <button className={styles.copyButton} onClick={handleCopyClick} disabled={!generatedUrl}>
-            <IconCopy />
-          </button>
-        </div>
+      <Input
+        placeholder="Generated URL"
+        value={generatedUrl}
+        readOnly
+        onCopy={() => {
+          copyToClipboard(generatedUrl);
+        }}
+      />
 
-        {url.includes('stories') && (
-          <>
-            <div className={styles.storiesInput}>
-              <textarea
-                placeholder="Paste user JSON data"
-                onChange={handleStoriesUrlChange}
-                value={storiesUrl}
-                className={styles.textarea}
-              />
-            </div>
+      {url.includes('stories') && (
+        <>
+          <TextArea placeholder="Paste JSON Data" onChange={handleStoriesUrlChange} value={storiesUrl} />
 
-            <div className={styles.copyInput}>
-              <input
-                type="text"
-                placeholder="Generated URL"
-                value={generatedStoriesUrl}
-                className={styles.input}
-                readOnly
-              />
-              <button className={styles.copyButton} onClick={handleCoyStoriesUrl} disabled={!generatedStoriesUrl}>
-                <IconCopy />
-              </button>
-            </div>
-          </>
-        )}
+          <Input
+            placeholder="Generated URL"
+            value={generatedStoriesUrl}
+            readOnly
+            onCopy={() => {
+              copyToClipboard(generatedStoriesUrl);
+            }}
+          />
+        </>
+      )}
 
-        <div className={styles.description}>{/* Add description here */}</div>
-        <textarea
-          placeholder="Paste JSON data"
-          onChange={handleJsonPaste}
-          value={jsonInput}
-          className={styles.textarea}
-        />
-      </div>
-    );
-  }
+      <TextArea placeholder="Paste JSON Data" onChange={handleJsonPaste} value={jsonInput} />
+    </div>
+  );
 };
 
 export default Home;

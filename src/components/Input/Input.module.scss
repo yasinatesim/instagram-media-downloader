@@ -1,0 +1,47 @@
+.container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.input {
+  padding: 8px;
+  font-size: 16px;
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+}
+
+.input:disabled {
+  background-color: #f5f5f5;
+  color: #777;
+}
+
+.copyButton {
+  cursor: pointer;
+  background-color: #3498db; /* Arka plan rengi */
+  color: #ffffff; /* Yazı rengi */
+  border: none;
+  padding: 8px;
+  margin-left: 5px; /* İstenilen boşluk değeri */
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #2980b9; /* Hover durumunda arka plan rengi */
+  }
+
+  &:disabled {
+    background-color: #96d5ff; /* Arka plan rengi */
+    cursor: not-allowed;
+  }
+
+  svg {
+    font-size: 20px; /* İkon boyutu */
+  }
+}

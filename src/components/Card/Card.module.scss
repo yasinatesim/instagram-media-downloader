@@ -1,0 +1,27 @@
+.container {
+	border-bottom: 1px solid #ddd;
+	margin-bottom: 4px;
+
+	&:last-of-type {
+		border-bottom: 0;
+	}
+}
+
+.image, .video {
+	position: relative;
+	display: inline-block;
+}
+
+.video {
+	@media (min-width: 768px) {
+		margin-left: 6px;
+	}
+}
+
+.icon {
+	position: absolute;
+	top: 5px;
+	right: 5px;
+	color: #fff;
+	font-size: 22px;
+}
