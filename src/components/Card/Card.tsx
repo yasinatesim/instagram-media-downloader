@@ -36,7 +36,7 @@ const Card: React.FC<Props> = ({ index, imageUrl, hasVideo, videoUrl }) => {
             [styles.hasVideo]: hasVideo,
           })}
         >
-          <img crossOrigin="anonymous" decoding="auto" width={300} src={imageUrl} alt={`Image ${imageUrl}`} />
+          <img crossOrigin="anonymous" decoding="auto" sizes='300px' style={{objectFit: 'cover'}} width={300} src={imageUrl} alt={`Image ${imageUrl}`} />
           <div className={styles.icon}>{hasVideo ? <IconVideoPreview /> : <IconImage />}</div>
         </a>
       </div>
