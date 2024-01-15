@@ -3,7 +3,7 @@ import { useState } from 'react';
 const useCopyToClipboard = () => {
   const [isCopied, setIsCopied] = useState(false);
 
-  const copyToClipboard = (text) => {
+  const copyToClipboard = (text: string) => {
     if (navigator.clipboard) {
       navigator.clipboard.writeText(text).then(
         () => {
