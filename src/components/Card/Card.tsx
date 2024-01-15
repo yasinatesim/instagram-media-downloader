@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 import cx from 'classnames';
 
@@ -16,36 +16,6 @@ type Props = {
 };
 
 const Card: React.FC<Props> = ({ index, imageUrl, hasVideo, videoUrl }) => {
-  const [base64Image, setBase64Image] = useState(null);
-
-  const urlToBase64 = async (url: string) => {
-    try {
-      const response = await fetch(url);
-
-      const blob = await response.blob();
-
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result);
-        reader.onerror = reject;
-        reader.readAsDataURL(blob);
-      });
-    } catch (error) {
-      console.error('An error occurred while converting image to base64:', error);
-      throw error;
-    }
-  };
-
-  useEffect(() => {
-    urlToBase64(imageUrl)
-      .then((base64Image) => {
-        setBase64Image(base64Image as any);
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
-  }, [imageUrl]);
-
   return (
     <div className={styles.container}>
       <div className={styles.index}>{index}.</div>
@@ -66,7 +36,7 @@ const Card: React.FC<Props> = ({ index, imageUrl, hasVideo, videoUrl }) => {
             [styles.hasVideo]: hasVideo,
           })}
         >
-          <img crossOrigin="anonymous" width={300} src={base64Image as any} alt={`Image ${imageUrl}`} />
+          <img crossOrigin="anonymous" width={300} src={imageUrl} alt={`Image ${imageUrl}`} />
           <div className={styles.icon}>{hasVideo ? <IconVideoPreview /> : <IconImage />}</div>
         </a>
       </div>
