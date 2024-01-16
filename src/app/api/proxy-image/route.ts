@@ -23,6 +23,8 @@ export async function GET (request: NextRequest, { params }: { params: { slug: s
     return NextResponse.json(json);
   } catch (error) {
     console.error('An error occurred:', error);
-    return NextResponse.error('Internal Server Error', 500);
+    return NextResponse.json({
+      error
+    });
   }
 }

@@ -16,24 +16,27 @@ type Props = {
 };
 
 const Card: React.FC<Props> = ({ index, imageUrl, hasVideo, videoUrl }) => {
+
   const [proxyImageUrl, setProxyImageUrl] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchProxyImage = async () => {
-      const response = await fetch(imageUrl);
+        // Proxy sunucu URL'i
+        const proxyServerUrl = '/api/proxy-image?url=';
 
-      const arrayBuffer = await response.arrayBuffer();
+        // Resmin proxy üzerinden alınmış URL'i
+        const response = await fetch(proxyServerUrl + encodeURIComponent(imageUrl));
+        const data = await response.json();
 
-      const base64Image = Buffer.from(arrayBuffer).toString('base64');
-      const dataUrl = `data:image/png;base64,${base64Image}`;
-
-      if (dataUrl) {
-        setProxyImageUrl(dataUrl);
-      }
+        if (data.imageUrl) {
+          setProxyImageUrl(data.imageUrl);
+        }
     };
 
     fetchProxyImage();
   }, [imageUrl]);
+
+
 
   return (
     <div className={styles.container}>
@@ -57,7 +60,11 @@ const Card: React.FC<Props> = ({ index, imageUrl, hasVideo, videoUrl }) => {
         >
           {/* <img crossOrigin="anonymous" width={300} src={imageUrl} alt={`Image ${imageUrl}`} /> */}
 
-          {proxyImageUrl ? <img width={300} src={proxyImageUrl} alt={`Image ${imageUrl}`} /> : <p>Loading...</p>}
+          {proxyImageUrl ? (
+            <img width={300} src={proxyImageUrl} alt={`Image ${imageUrl}`} />
+          ) : (
+            <p>Loading...</p>
+          )}
 
           <div className={styles.icon}>{hasVideo ? <IconVideoPreview /> : <IconImage />}</div>
         </a>
