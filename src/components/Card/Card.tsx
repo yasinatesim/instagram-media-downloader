@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import cx from 'classnames';
 
@@ -16,6 +16,25 @@ type Props = {
 };
 
 const Card: React.FC<Props> = ({ index, imageUrl, hasVideo, videoUrl }) => {
+  const [proxyImageUrl, setProxyImageUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchProxyImage = async () => {
+      const response = await fetch(imageUrl);
+
+      const arrayBuffer = await response.arrayBuffer();
+
+      const base64Image = Buffer.from(arrayBuffer).toString('base64');
+      const dataUrl = `data:image/png;base64,${base64Image}`;
+
+      if (dataUrl) {
+        setProxyImageUrl(dataUrl);
+      }
+    };
+
+    fetchProxyImage();
+  }, [imageUrl]);
+
   return (
     <div className={styles.container}>
       <div className={styles.index}>{index}.</div>
@@ -36,7 +55,10 @@ const Card: React.FC<Props> = ({ index, imageUrl, hasVideo, videoUrl }) => {
             [styles.hasVideo]: hasVideo,
           })}
         >
-          <img crossOrigin="anonymous" width={300} src={imageUrl} alt={`Image ${imageUrl}`} />
+          {/* <img crossOrigin="anonymous" width={300} src={imageUrl} alt={`Image ${imageUrl}`} /> */}
+
+          {proxyImageUrl ? <img width={300} src={proxyImageUrl} alt={`Image ${imageUrl}`} /> : <p>Loading...</p>}
+
           <div className={styles.icon}>{hasVideo ? <IconVideoPreview /> : <IconImage />}</div>
         </a>
       </div>
