@@ -1,31 +1,25 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
-export const dynamic = 'force-dynamic'
+export const dynamic = 'force-dynamic';
 
-export async function GET (request: NextRequest, { params }: { params: { slug: string } }){
+export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const url = searchParams.get('url');
+    const imageUrl = searchParams.get('imageUrl');
 
-    // @ts-ignore
-    const response = await fetch(url);
+    const response = await fetch(imageUrl as string);
 
-    // @ts-ignore
     const arrayBuffer = await response.arrayBuffer();
 
-    // ArrayBuffer'ı base64'e çevir
     const base64Image = Buffer.from(arrayBuffer).toString('base64');
-    const dataUrl = `data:image/png;base64,${base64Image}`;
+    const imageUrlBase64 = `data:image/png;base64,${base64Image}`;
 
-    const json = {
-      imageUrl: dataUrl
+    const data = {
+      imageUrlBase64,
     };
 
-    return NextResponse.json(json);
+    return Response.json(data, { status: 200 });
   } catch (error) {
-    console.error('An error occurred:', error);
-    return NextResponse.json({
-      error
-    });
+    return Response.json(error, { status: 200 });
   }
 }
