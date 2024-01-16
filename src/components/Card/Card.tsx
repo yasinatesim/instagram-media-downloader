@@ -51,9 +51,14 @@ const Card: React.FC<Props> = ({ index, imageUrl, hasVideo, videoUrl }) => {
             [styles.hasVideo]: hasVideo,
           })}
         >
-          {proxyImageUrl ? <img width={300} src={proxyImageUrl} alt={`Image ${imageUrl}`} /> : <p>Loading...</p>}
-
-          <div className={styles.icon}>{hasVideo ? <IconVideoPreview /> : <IconImage />}</div>
+          {proxyImageUrl ? (
+            <>
+              <img width={300} src={proxyImageUrl} alt={`Image ${imageUrl}`} />
+              <div className={styles.icon}>{hasVideo ? <IconVideoPreview /> : <IconImage />}</div>
+            </>
+          ) : (
+              <span className={styles.loader} />
+          )}
         </a>
       </div>
     </div>
