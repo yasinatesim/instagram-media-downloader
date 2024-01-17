@@ -8,11 +8,12 @@ type Props = {
   placeholder: string;
   value: string;
   readOnly?: boolean;
+  disabled?: boolean;
   onCopy?: () => void;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-const Input: React.FC<Props> = ({ placeholder, value, onChange, onCopy, ...props }) => {
+const Input: React.FC<Props> = ({ placeholder, value, onChange, onCopy, disabled, ...props }) => {
   return (
     <div className={styles.container}>
       <input
@@ -21,6 +22,7 @@ const Input: React.FC<Props> = ({ placeholder, value, onChange, onCopy, ...props
         value={value}
         onChange={onChange}
         className={styles.input}
+        disabled={disabled}
         {...props}
       />
       {onCopy && (

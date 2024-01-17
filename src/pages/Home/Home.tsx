@@ -23,21 +23,22 @@ const Home: React.FC = () => {
 
   const [url, setUrl] = useState('');
   const [generatedUrl, setGeneratedUrl] = useState('');
-  const [generatedStoriesUrl, setGeneratedStoriesUrl] = useState('');
   const [jsonInput, setJsonInput] = useState('');
-  const [storiesUrl, setStoriesUrl] = useState('');
 
   const [processedData, setProcessedData] = useState<any>(null);
 
-  const handleStoriesUrlChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setStoriesUrl(event.target.value);
 
-    const parsedValue = JSON.parse(event.target.value);
-    const url = INSTAGRAM_GRAPHQL_URL.replace('<USER_ID>', parsedValue.graphql.user.id);
-    setGeneratedStoriesUrl(url);
+  const getInstagramUserId = async (username: string) => {
+    try {
+      const response = await fetch(`/api/get-user-info?username=${username}`);
+      const data = await response.json();
+      return data.userId
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
-  const handleUrlChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleUrlChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     setUrl(event.target.value);
 
     const inputValue = event.target.value;
@@ -60,7 +61,9 @@ const Home: React.FC = () => {
         const usernameMatch = url.match(INSTAGRAM_USERNAME_REGEX_FOR_STORIES);
         const username: any = usernameMatch && usernameMatch[1];
 
-        finalUrl = INSTAGRAM_PROFILE_URL.replace('<USER_NAME>', username);
+        const userId = await getInstagramUserId(username);
+
+        finalUrl =  INSTAGRAM_GRAPHQL_URL.replace('<USER_ID>', userId as any);
       }
 
       setGeneratedUrl(finalUrl);
@@ -98,30 +101,12 @@ const Home: React.FC = () => {
       <Input
         placeholder="Generated URL"
         value={generatedUrl}
+        disabled={!generatedUrl}
         readOnly
         onCopy={() => {
           copyToClipboard(generatedUrl);
         }}
       />
-
-      {url.includes('stories') && (
-        <>
-          <div className={styles.description}>Paste JSON data in the below input</div>
-          <TextArea placeholder="Paste JSON Data" onChange={handleStoriesUrlChange} value={storiesUrl} />
-
-          <div className={styles.description}>
-            Copy the generated link and open it in a new tab. Then copy the JSON output from the tab
-          </div>
-          <Input
-            placeholder="Generated URL"
-            value={generatedStoriesUrl}
-            readOnly
-            onCopy={() => {
-              copyToClipboard(generatedStoriesUrl);
-            }}
-          />
-        </>
-      )}
 
       <div className={styles.description}>
         Paste the JSON data into the input below. You will then be redirected to result page 🎉
