@@ -1,20 +1,34 @@
 <h3 align="center">
-  <br>
-  <a href="https://github.com/yasinatesim/next-starter-kit"><img src="https://yasinates.com/tech/next.svg" alt="Next Starter Kit" width="200"></a>
-  <br>
-  Next Starter Kit
-  <br>
+  <br />
+   <a  href="https://github.com/yasinatesim/instagram-media-downloader"><img src="https://yasinates.com/instagram-media-downloader.svg" alt="Instagram Media Downloader" width="200" /></a>
+  <br />
+Instagram Media Downloader
+  <br />
 </h3>
 
-<hr>
+<hr />
 
-<p  align="center">This project is a starter kit for develop the front-end web applications with Next.js 😎</p>
+<p  align="center">Effortlessly download Instagram reels, stories, and posts without the need for user authentication. Enjoy seamless content saving in a user-friendly app.</p>
+
+
+  <p align="center">
+· <a  href="https://instagram-media-downloader.yasinatesim.vercel.app/">View App</a>
+  </p>
 
 ## 📖 About
 
-  <img width="500" src="https://yasinates.com/next-starter-kit.jpg">
+**Instagram Media Downloader:**
 
-This project is a starter kit for develop the front-end web applications with Next.js 😎
+Effortlessly download Instagram reels, stories, and posts with our user-friendly app. No login needed! 🚀
+
+**Features:**
+- **Reels Download:** One-click download for Instagram reels.
+- **Story Downloader:** Easily save your favorite stories.
+- **Post Download:** Download Instagram posts hassle-free.
+
+Simplify your media saving experience! No login, no hassle. Enjoy Instagram content offline. 📲✨
+
+
 
 ### 📚Tech Stack
 
@@ -99,6 +113,20 @@ This project is a starter kit for develop the front-end web applications with Ne
 
 <tr>
 
+<tr>
+
+<td>
+
+<a  href="https://www.npmjs.com/package/eslint-plugin-simple-import-sort">Eslint Simple Import Sort</a>
+
+</td>
+
+<td>Enforce consistent import order in your JavaScript code</td>
+
+</tr>
+
+<tr>
+
 <td>
 
 <a  href="https://prettier.io/">Prettier</a>
@@ -111,21 +139,28 @@ This project is a starter kit for develop the front-end web applications with Ne
 
 </table>
 
+## 🧐 What's inside?
+
+
+
 ## Getting Started
 
 ### 📦 Prerequisites
 
-- Node (v18.18.0+)
+- Node (v19.18.0+)
 
-- Npm (v9.00+)
+- Npm (v8.1.0+)
+
+
 
 ### ⚙️ How To Use
+
 
 1. Clone this repository
 
 ```bash
 
-git clone https://github.com/yasinatesim/next-starter-kit.git
+git clone https://github.com/yasinatesim/instagram-media-downloader.git
 
 ```
 
@@ -150,13 +185,13 @@ npm run dev
 Docker Build
 
 ```bash
-docker build -t yasinatesim-next-starter-kit .
+docker build -t instagram-media-downloader .
 ```
 
 Docker Run
 
 ```bash
-docker run -p 3000:3000 -d yasinatesim-next-starter-kit
+docker run -p 3000:3000 -d instagram-media-downloader
 ```
 
 App is running to [http://localhost:3000/](http://localhost:3000/)
@@ -169,7 +204,7 @@ docker-compose up --build
 
 App is running to [http://localhost:3000/](http://localhost:3000/)
 
-**For Production Build & Build Start**
+**For Production Build &amp; Build Start**
 
 ```bash
 
@@ -191,11 +226,12 @@ npm run start
 npm run lint
 ```
 
+
 ## 🔑 License
 
-- Copyright © 2024 - MIT License.
+* Copyright © 2024 - MIT License.
 
-See `LICENSE` for more information.
+See [LICENSE](https://github.com/yasinatesim/instagram-media-downloader/blob/master/LICENSE) for more information.
 
 ---
 

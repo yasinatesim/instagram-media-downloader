@@ -88,7 +88,7 @@ const Home: React.FC = () => {
 
   return (
     <div className="container">
-      <h2>Instagram Private Downloader</h2>
+      <h2>Instagram Media Downloader</h2>
       <div className={styles.description}>Please enter Instagram story or reels or post url</div>
       <Input placeholder="Enter URL" value={url} onChange={handleUrlChange} />
 
