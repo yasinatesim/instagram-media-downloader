@@ -141,6 +141,21 @@ Simplify your media saving experience! No login, no hassle. Enjoy Instagram cont
 
 ## 🧐 What's inside?
 
+1. Copy Instagram URL
+
+   ![Step 1](./src/assets/images/how-to-use-1.jpg)
+
+2. Paste the URL into the first input on the page
+
+   ![Step 2](./src/assets/images/how-to-use-2.jpg)
+
+3. Select and copy all JSON code from the tab
+
+   ![Step 3](./src/assets/images/how-to-use-3.jpg)
+
+4. Paste the code into the input. You will then be redirected to the result page
+
+   ![Step 4](./src/assets/images/how-to-use-4.jpg)
 
 
 ## Getting Started
