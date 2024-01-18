@@ -29,7 +29,7 @@ const Home: React.FC = () => {
 
   const getInstagramUserId = async (username: string) => {
     try {
-      const response = await fetch(`/api/get-user-info?username=${username}`);
+      const response = await fetch(`/api/get-user-info?username=${encodeURIComponent(username)}`);
       const data = await response.json();
       return data.userId;
     } catch (error) {
