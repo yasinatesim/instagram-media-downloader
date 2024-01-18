@@ -1,5 +1,7 @@
 import { NextRequest } from 'next/server';
 
+import axios from 'axios';
+
 export const dynamic = 'force-dynamic';
 
 export async function GET(request: NextRequest) {
@@ -17,15 +19,16 @@ export async function GET(request: NextRequest) {
       'sec-fetch-site': 'same-origin',
     };
 
-    const response = await fetch(url, { headers });
-    const result = await response.json();
-
+    const axiosResponse = await axios.get(url, {
+      headers
+    });
     const data = {
-      userId: result.data.user.id,
+      userId: axiosResponse.data.data.user.id,
     };
 
     return Response.json(data, { status: 200 });
   } catch (error) {
-    return Response.json(error, { status: 400 });
+    // @ts-ignore
+    return Response.json(error.response.data, { status: 400 });
   }
 }
