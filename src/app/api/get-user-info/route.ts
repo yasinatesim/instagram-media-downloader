@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
     };
 
     const response = await fetch(url, { headers });
-    console.log("response:", response)
+    console.log("response:",await  response.json())
     const result = await response.json();
     console.log("result:", result)
 
