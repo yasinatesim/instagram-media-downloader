@@ -1,5 +1,9 @@
 import { NextRequest } from 'next/server';
 
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+export const fetchCache = 'force-no-store';
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -16,9 +20,8 @@ export async function GET(request: NextRequest) {
     };
 
     const response = await fetch(url, { headers });
-    console.log("response:",await  response.json())
     const result = await response.json();
-    console.log("result:", result)
+    console.log('result:', result);
 
     const data = {
       userId: result.data.user.id,
