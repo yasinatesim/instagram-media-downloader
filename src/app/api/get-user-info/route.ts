@@ -17,6 +17,7 @@ export async function GET(request: NextRequest) {
 
     const response = await fetch(url, { headers });
     const result = await response.json();
+    console.log("result:", result)
 
     const data = {
       userId: result.data.user.id,
