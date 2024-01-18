@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
     const axiosResponse = await axios.get(url, {
       headers
     });
-    console.log("axiosResponse:", axiosResponse)
+    console.log("axiosResponse:", axiosResponse.data)
     const data = {
       userId: axiosResponse.data.data.user.id,
     };
