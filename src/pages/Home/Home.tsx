@@ -5,9 +5,10 @@ import toast from 'react-hot-toast';
 import {
   INSTAGRAM_POSTPAGE_REGEX,
   INSTAGRAM_REELSPAGE_REGEX,
+  INSTAGRAM_USERNAME_REGEX_FOR_PROFILE,
   INSTAGRAM_USERNAME_REGEX_FOR_STORIES,
 } from '@/constants/regexes';
-import { INSTAGRAM_GRAPHQL_URL, INSTAGRAM_PROFILE_URL, INSTAGRAM_URL_PARAMS } from '@/constants/urls';
+import { INSTAGRAM_GRAPHQL_URL, INSTAGRAM_URL_PARAMS } from '@/constants/urls';
 
 import { useCopyToClipboard } from '@/hooks';
 
@@ -24,51 +25,60 @@ const Home: React.FC = () => {
   const [url, setUrl] = useState('');
   const [generatedUrl, setGeneratedUrl] = useState('');
   const [jsonInput, setJsonInput] = useState('');
-
   const [processedData, setProcessedData] = useState<any>(null);
-
 
   const getInstagramUserId = async (username: string) => {
     try {
       const response = await fetch(`/api/get-user-info?username=${username}`);
       const data = await response.json();
-      return data.userId
+      return data.userId;
     } catch (error) {
       console.error('Error:', error);
     }
   };
 
-  const handleUrlChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    setUrl(event.target.value);
-
-    const inputValue = event.target.value;
-    const urlObj = new URL(inputValue);
-    urlObj.search = '';
-
-    const url = urlObj.toString();
-
+  const handleGenerateUrl = async () => {
     if (!url) {
       toast.error('Please provide a URL');
       return;
     }
 
-    let finalUrl;
+    try {
+      const urlObj = new URL(url);
 
-    if (url.includes('instagram')) {
-      if (url.includes(`${INSTAGRAM_POSTPAGE_REGEX}`) || url.includes(`${INSTAGRAM_REELSPAGE_REGEX}`)) {
-        finalUrl = `${url}${INSTAGRAM_URL_PARAMS}`;
+      if (urlObj.protocol) {
+        urlObj.search = '';
+
+        let finalUrl;
+
+        if (url.includes('instagram')) {
+          if (url.includes(`${INSTAGRAM_POSTPAGE_REGEX}`) || url.includes(`${INSTAGRAM_REELSPAGE_REGEX}`)) {
+            finalUrl = `${url}${INSTAGRAM_URL_PARAMS}`;
+          } else if (url.includes('stories')) {
+            const usernameMatch = url.match(INSTAGRAM_USERNAME_REGEX_FOR_STORIES);
+            const username: any = usernameMatch && usernameMatch[1];
+
+            const userId = await getInstagramUserId(username);
+
+            finalUrl = INSTAGRAM_GRAPHQL_URL.replace('<USER_ID>', userId as any);
+          } else {
+            const usernameMatch = url.match(INSTAGRAM_USERNAME_REGEX_FOR_PROFILE);
+            const username: any = usernameMatch && usernameMatch[1];
+
+            const userId = await getInstagramUserId(username);
+
+            finalUrl = INSTAGRAM_GRAPHQL_URL.replace('<USER_ID>', userId as any);
+          }
+
+          setGeneratedUrl(finalUrl);
+        } else {
+          toast.error('Invalid URL. Must be an Instagram URL.');
+        }
       } else {
-        const usernameMatch = url.match(INSTAGRAM_USERNAME_REGEX_FOR_STORIES);
-        const username: any = usernameMatch && usernameMatch[1];
-
-        const userId = await getInstagramUserId(username);
-
-        finalUrl =  INSTAGRAM_GRAPHQL_URL.replace('<USER_ID>', userId as any);
+        toast.error('Invalid URL format');
       }
-
-      setGeneratedUrl(finalUrl);
-    } else {
-      toast.error('Invalid URL. Must be an Instagram URL.');
+    } catch (error) {
+      toast.error('Invalid URL format');
     }
   };
 
@@ -93,7 +103,14 @@ const Home: React.FC = () => {
     <div className="container">
       <h2>Instagram Media Downloader</h2>
       <div className={styles.description}>Please enter Instagram story or reels or post url</div>
-      <Input placeholder="Enter URL" value={url} onChange={handleUrlChange} />
+      <Input
+        placeholder="Enter URL"
+        value={url}
+        onChange={(e) => {
+          setUrl(e.target.value);
+        }}
+        onBlur={handleGenerateUrl}
+      />
 
       <div className={styles.description}>
         Copy the generated link and open it in a new tab. Then copy the JSON output from the tab
