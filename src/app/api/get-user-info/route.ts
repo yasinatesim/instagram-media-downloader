@@ -6,6 +6,7 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const username = searchParams.get('username');
+    console.log("username:", username)
 
     const url = `https://i.instagram.com/api/v1/users/web_profile_info/?username=${username}`;
     const headers = {
@@ -18,7 +19,9 @@ export async function GET(request: NextRequest) {
     };
 
     const response = await fetch(url, { headers });
+    console.log("response:", response)
     const result = await response.json();
+    console.log("result:", result)
 
     const data = {
       userId: result.data.user.id,
