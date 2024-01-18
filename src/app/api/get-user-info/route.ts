@@ -1,5 +1,7 @@
 import { NextRequest } from 'next/server';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -24,6 +26,7 @@ export async function GET(request: NextRequest) {
 
     return Response.json(data, { status: 200 });
   } catch (error) {
+    console.log("error:", error)
     return Response.json(error, { status: 400 });
   }
 }
