@@ -3,6 +3,8 @@ import { NextRequest } from 'next/server';
 import axios from 'axios';
 
 export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs'
+export const fetchCache = 'force-no-store'
 
 export async function GET(request: NextRequest) {
   try {
