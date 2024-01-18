@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 
 import axios from 'axios';
+import { execSync } from 'child_process';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs'
@@ -18,12 +19,16 @@ export async function GET(request: NextRequest) {
       'X-IG-App-ID': 'magic value',
     };
 
-    const axiosResponse = await axios.get(url, {
-      headers
-    });
-    console.log("axiosResponse:", axiosResponse.data)
+    // @ts-ignore
+    const headersString = Object.keys(headers).map(key => `${key}: ${headers[key]}`).join(' -H ');
+
+    const curlCommand = `curl -X GET "${url}" -H "${headersString}"`;
+    const result = execSync(curlCommand, { encoding: 'utf-8' });
+
+    const parsedResult = JSON.parse(result);
+
     const data = {
-      userId: axiosResponse.data.data.user.id,
+      userId: parsedResult.data.user.id,
     };
 
     return Response.json(data, { status: 200 });
