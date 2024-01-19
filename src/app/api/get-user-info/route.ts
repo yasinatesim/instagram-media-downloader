@@ -1,7 +1,5 @@
 import { NextRequest } from 'next/server';
 
-import fetch from 'node-fetch'
-
 export const dynamic = 'force-dynamic';
 export const runtime = 'edge';
 export const fetchCache = 'force-no-store';
