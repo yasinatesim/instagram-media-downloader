@@ -19,7 +19,10 @@ export async function GET(request: NextRequest) {
       'sec-fetch-site': 'same-origin',
     };
 
-    const response = await fetch(url, { headers });
+    const response = await fetch(url, {
+      "credentials": "include",
+      headers
+    });
     const result = await response.json();
     console.log('result:', result);
 
