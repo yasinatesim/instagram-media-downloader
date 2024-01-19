@@ -28,10 +28,8 @@ export async function GET(request: NextRequest) {
       headers,
     });
     const result = await response.json();
-    console.log('result:', result);
 
     const data = {
-      // @ts-ignore
       userId: result.data.user.id,
     };
 
