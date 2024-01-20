@@ -162,9 +162,9 @@ Simplify your media saving experience! No login, no hassle. Enjoy Instagram cont
 
 ### 📦 Prerequisites
 
-- Node (v19.18.0+)
+- Node (v18.17.0+)
 
-- Npm (v8.1.0+)
+- Npm (v9.0.0+)
 
 
 
