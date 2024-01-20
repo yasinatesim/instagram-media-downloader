@@ -10,9 +10,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint --fix",
+    "lint": "next lint && prettier --check .",
     "format": "prettier --write --ignore-unknown .",
-    "lint-staged": "lint-staged",
     "prepare": "husky install"
   },
   "dependencies": {
@@ -42,17 +41,5 @@
     "lint-staged": "^15.2.0",
     "prettier": "^3.2.1",
     "typescript": "^5"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run lint",
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-    }
-  },
-  "lint-staged": {
-    "*.{js,ts,tsx}": [
-      "npm run lint",
-      "git add"
-    ]
   }
 }

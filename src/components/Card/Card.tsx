@@ -57,7 +57,7 @@ const Card: React.FC<Props> = ({ index, imageUrl, hasVideo, videoUrl }) => {
               <div className={styles.icon}>{hasVideo ? <IconVideoPreview /> : <IconImage />}</div>
             </>
           ) : (
-              <span className={styles.loader} />
+            <span className={styles.loader} />
           )}
         </a>
       </div>

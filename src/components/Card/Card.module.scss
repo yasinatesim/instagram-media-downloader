@@ -14,9 +14,8 @@
 .index {
   font-size: 18px;
   margin-right: 12px;
-	display: none;
+  display: none;
   min-width: 30px;
-
 
   @media (min-width: 768px) {
     display: inline;
@@ -43,7 +42,6 @@
   font-size: 22px;
 }
 
-
 .loader {
   margin-top: 12px;
   margin-bottom: 12px;
@@ -55,13 +53,13 @@
   display: inline-block;
   box-sizing: border-box;
   animation: rotation 1s linear infinite;
-  }
+}
 
-  @keyframes rotation {
+@keyframes rotation {
   0% {
-      transform: rotate(0deg);
+    transform: rotate(0deg);
   }
   100% {
-      transform: rotate(360deg);
+    transform: rotate(360deg);
   }
-  }
+}

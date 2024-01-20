@@ -5,26 +5,25 @@
 }
 
 .icon {
-	display: flex;
-	align-items: center;
-	font-size: 18px;
-	margin-right: 12px;
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  margin-right: 12px;
 }
 
 .description {
-	display: flex;
-	align-items: center;
-	line-height: 1.4;
-	border-bottom: 1px solid #ddd;
-	padding-top: 4px;
-	padding-bottom: 4px;
+  display: flex;
+  align-items: center;
+  line-height: 1.4;
+  border-bottom: 1px solid #ddd;
+  padding-top: 4px;
+  padding-bottom: 4px;
 
+  &:last-of-type {
+    margin-bottom: 12px;
+  }
 
-	&:last-of-type {
-		margin-bottom: 12px;
-	}
-
-	svg {
+  svg {
     margin-left: 12px;
   }
 

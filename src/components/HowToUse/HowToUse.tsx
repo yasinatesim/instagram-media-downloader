@@ -5,7 +5,7 @@ import howToUseImage2 from '@/assets/images/how-to-use-2.jpg';
 import howToUseImage3 from '@/assets/images/how-to-use-3.jpg';
 import howToUseImage4 from '@/assets/images/how-to-use-4.jpg';
 
-import styles from "./HowToUse.module.scss"
+import styles from './HowToUse.module.scss';
 
 type Props = {};
 
