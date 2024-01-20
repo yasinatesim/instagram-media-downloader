@@ -12,6 +12,7 @@
     "start": "next start",
     "lint": "next lint --fix",
     "format": "prettier --write --ignore-unknown .",
+    "lint-staged": "lint-staged",
     "prepare": "husky install"
   },
   "dependencies": {
