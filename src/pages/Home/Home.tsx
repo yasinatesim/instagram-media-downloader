@@ -3,12 +3,18 @@ import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
 import {
+  INSTAGRAM_HIGHLIGHT_ID_REGEX,
+  INSTAGRAM_HIGHLIGHTSPAGE_REGEX,
   INSTAGRAM_POSTPAGE_REGEX,
   INSTAGRAM_REELSPAGE_REGEX,
   INSTAGRAM_USERNAME_REGEX_FOR_PROFILE,
   INSTAGRAM_USERNAME_REGEX_FOR_STORIES,
 } from '@/constants/regexes';
-import { INSTAGRAM_GRAPHQL_URL, INSTAGRAM_URL_PARAMS } from '@/constants/urls';
+import {
+  INSTAGRAM_GRAPHQL_URL_FOR_HIGHLIGHTS,
+  INSTAGRAM_GRAPHQL_URL_FOR_STORIES,
+  INSTAGRAM_URL_PARAMS,
+} from '@/constants/urls';
 
 import { useCopyToClipboard } from '@/hooks';
 
@@ -54,23 +60,32 @@ const Home: React.FC = () => {
         if (url.includes('instagram')) {
           if (url.includes(`${INSTAGRAM_POSTPAGE_REGEX}`) || url.includes(`${INSTAGRAM_REELSPAGE_REGEX}`)) {
             finalUrl = `${url}${INSTAGRAM_URL_PARAMS}`;
-          } else if (url.includes('stories')) {
+          } else if (INSTAGRAM_HIGHLIGHTSPAGE_REGEX.test(url)) {
+            const match = url.match(INSTAGRAM_HIGHLIGHT_ID_REGEX);
+
+            if (match && match[1]) {
+              finalUrl = INSTAGRAM_GRAPHQL_URL_FOR_HIGHLIGHTS.replace('<HIGHLIGHT_ID>', match[1] as any);
+            }
+          } else if (INSTAGRAM_USERNAME_REGEX_FOR_STORIES.test(url)) {
             const usernameMatch = url.match(INSTAGRAM_USERNAME_REGEX_FOR_STORIES);
             const username: any = usernameMatch && usernameMatch[1];
 
             const userId = await getInstagramUserId(username);
 
-            finalUrl = INSTAGRAM_GRAPHQL_URL.replace('<USER_ID>', userId as any);
+            finalUrl = INSTAGRAM_GRAPHQL_URL_FOR_STORIES.replace('<USER_ID>', userId as any);
           } else {
             const usernameMatch = url.match(INSTAGRAM_USERNAME_REGEX_FOR_PROFILE);
             const username: any = usernameMatch && usernameMatch[1];
 
             const userId = await getInstagramUserId(username);
 
-            finalUrl = INSTAGRAM_GRAPHQL_URL.replace('<USER_ID>', userId as any);
+            finalUrl = INSTAGRAM_GRAPHQL_URL_FOR_STORIES.replace('<USER_ID>', userId as any);
           }
-
-          setGeneratedUrl(finalUrl);
+          if (finalUrl) {
+            setGeneratedUrl(finalUrl);
+          } else {
+            toast.error('Failed to generate URL. Please check the input and try again.');
+          }
         } else {
           toast.error('Invalid URL. Must be an Instagram URL.');
         }

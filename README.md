@@ -22,9 +22,10 @@ Instagram Media Downloader
 Effortlessly download Instagram reels, stories, and posts with our user-friendly app. No login needed! 🚀
 
 **Features:**
-- **Reels Download:** One-click download for Instagram reels.
-- **Story Downloader:** Easily save your favorite stories.
+- **Story Download:** Easily save your favorite stories.
+- **Highlights Download:** Save Instagram highlights effortlessly.
 - **Post Download:** Download Instagram posts hassle-free.
+- **Reels Download:** One-click download for Instagram reels.
 
 Simplify your media saving experience! No login, no hassle. Enjoy Instagram content offline. 📲✨
 

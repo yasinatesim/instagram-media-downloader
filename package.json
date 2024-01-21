@@ -10,7 +10,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint && prettier --check .",
+    "lint": "next lint --fix && prettier --check .",
     "format": "prettier --write --ignore-unknown .",
     "prepare": "husky install"
   },
