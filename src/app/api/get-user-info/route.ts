@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
     const url = `https://i.instagram.com/api/v1/users/web_profile_info/?username=${username}`;
     const headers = {
       'User-Agent': 'iphone_ua',
-      "x-ig-app-id": "936619743392459",
+      'x-ig-app-id': '936619743392459',
       'sec-fetch-dest': 'empty',
       'sec-fetch-mode': 'cors',
       'sec-fetch-site': 'same-origin',
