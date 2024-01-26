@@ -9,7 +9,6 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const username = searchParams.get('username');
 
-
     const url = `https://i.instagram.com/api/v1/users/web_profile_info/?username=${username}`;
     const headers = {
       'Access-Control-Allow-Origin': '*',
