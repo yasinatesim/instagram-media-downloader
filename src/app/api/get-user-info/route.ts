@@ -11,8 +11,7 @@ export async function GET(request: NextRequest) {
 
     const url = `https://i.instagram.com/api/v1/users/web_profile_info/?username=${username}`;
     const headers = {
-      'User-Agent':
-        'Instagram 219.0.0.12.117 Android',
+      'User-Agent': 'Instagram 219.0.0.12.117 Android',
       'X-IG-App-ID': `${new Date().getTime()}`,
       'sec-fetch-dest': 'empty',
       'sec-fetch-mode': 'cors',
@@ -24,9 +23,12 @@ export async function GET(request: NextRequest) {
     });
 
     if (!response.ok) {
-      return Response.json({
-        error: 'error 1'
-      }, { status: 400 });
+      return Response.json(
+        {
+          error: 'error 1',
+        },
+        { status: 400 }
+      );
     }
 
     const result = await response.json();
@@ -39,9 +41,12 @@ export async function GET(request: NextRequest) {
 
       return Response.json(data, { status: 200 });
     } else {
-      return Response.json({
-        error: 'error'
-      }, { status: 400 });
+      return Response.json(
+        {
+          error: 'error',
+        },
+        { status: 400 }
+      );
     }
   } catch (error) {
     return Response.json(error, { status: 400 });
