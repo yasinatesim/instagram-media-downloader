@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 
-export const dynamic = 'force-dynamic';
+export const runtime = "nodejs";
+export const dynamic = "force-static";
 // export const runtime = 'edge';
 // export const fetchCache = 'force-no-store';
 
