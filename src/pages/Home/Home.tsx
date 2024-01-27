@@ -27,6 +27,8 @@ import TextArea from '@/components/TextArea';
 
 import styles from './Home.module.scss';
 
+import generateDynamicHeaders from '@/utils/generateDynamicHeaders';
+
 const Home: React.FC = () => {
   const { isCopied, copyToClipboard } = useCopyToClipboard();
   const { executeRecaptcha } = useGoogleReCaptcha();
@@ -49,11 +51,14 @@ const Home: React.FC = () => {
         throw new Error('Unable to retrieve reCAPTCHA token.');
       }
 
+      const dynamicHeaders = generateDynamicHeaders();
+
       const response = await fetch('/api/get-user-info', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           ...REQUEST_HEADER,
+          ...dynamicHeaders,
         },
         body: JSON.stringify({ username: username, token }),
       });

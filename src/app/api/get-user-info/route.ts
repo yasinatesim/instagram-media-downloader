@@ -2,6 +2,8 @@ import { NextRequest } from 'next/server';
 
 import { REQUEST_HEADER } from '@/constants/requests';
 
+import generateDynamicHeaders from '@/utils/generateDynamicHeaders';
+
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 export const fetchCache = 'default-no-store';
@@ -41,10 +43,13 @@ export async function POST(request: NextRequest) {
 
     const recaptchaResponse = await verifyRecaptcha(token);
 
+    const dynamicHeaders = generateDynamicHeaders();
+
     if (recaptchaResponse.success && recaptchaResponse.score >= 0.5) {
       const url = `https://www.instagram.com/api/v1/users/web_profile_info/?username=${username}`;
       const headers = {
         ...REQUEST_HEADER,
+        ...dynamicHeaders,
       };
 
       const response = await fetch(url, {
