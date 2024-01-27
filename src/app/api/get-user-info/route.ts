@@ -1,4 +1,5 @@
 import { NextRequest } from 'next/server';
+
 import axios from 'axios';
 
 import { REQUEST_HEADER } from '@/constants/requests';

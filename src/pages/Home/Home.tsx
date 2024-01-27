@@ -1,8 +1,9 @@
 'use client';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import toast from 'react-hot-toast';
+
+import axios from 'axios';
 
 import {
   INSTAGRAM_HIGHLIGHT_ID_REGEX,
