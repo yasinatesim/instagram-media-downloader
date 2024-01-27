@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
       };
 
       try {
-        const response = await axios.get(url, { headers });
+        const response = await axios.get(url, { headers, maxRedirects: 0 });
 
         if (response.status !== 200) {
           throw new Error(`Request failed with status: ${response.status}`);
