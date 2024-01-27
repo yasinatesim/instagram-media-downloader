@@ -1,0 +1,9 @@
+{
+  "builds": [
+    { "src": "api/*.js", "use": "@now/node" }
+  ],
+  "routes": [
+    { "src": "/api/(.*)", "dest": "api/$1" }
+  ],
+  "dev": true
+}
