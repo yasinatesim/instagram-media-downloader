@@ -52,7 +52,6 @@ const Home: React.FC = () => {
       const response = await fetch('/api/get-user-info', {
         method: 'POST',
         headers: {
-          Accept: 'application/json, text/plain, */*',
           'Content-Type': 'application/json',
           ...REQUEST_HEADER,
         },
