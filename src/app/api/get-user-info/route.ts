@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
       });
 
       if (!response.ok) {
-        return new Response(JSON.stringify({ error: 'error 1' }), { status: 400 });
+        return new Response(JSON.stringify({ error: response }), { status: 400 });
       }
 
       const result = await response.json();
@@ -70,6 +70,6 @@ export async function POST(request: NextRequest) {
       }
     }
   } catch (error) {
-    return new Response(JSON.stringify({ error: (error as Error).message }), { status: 500 });
+    return new Response(JSON.stringify({ error: (error as Error).message }), { status: 400 });
   }
 }
