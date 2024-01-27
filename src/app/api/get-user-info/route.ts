@@ -2,7 +2,7 @@ import { NextRequest } from 'next/server';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
-export const fetchCache = 'force-no-store';
+export const fetchCache = 'default-no-store';
 
 export async function GET(request: NextRequest) {
   try {
