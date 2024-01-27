@@ -1,17 +1,10 @@
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 import { REQUEST_HEADER } from '@/constants/requests';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 export const fetchCache = 'default-no-store';
-
-export const config = {
-  api: {
-    externalResolver: true,
-    bodyParser: false,
-  },
-};
 
 const verifyRecaptcha = async (token: string) => {
   const secretKey = process.env.RECAPTCHA_SECRET_KEY;
@@ -38,7 +31,12 @@ const verifyRecaptcha = async (token: string) => {
   }
 };
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest, response: NextResponse) {
+  Object.entries(REQUEST_HEADER).forEach(([key, value]) => {
+    // @ts-ignore
+    response.setHeader(`${key}`, `${value}`);
+  });
+
   try {
     const { username, token } = await request.json();
 
