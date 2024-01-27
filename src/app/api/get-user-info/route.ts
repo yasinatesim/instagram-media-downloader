@@ -6,6 +6,13 @@ export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 export const fetchCache = 'default-no-store';
 
+export const config = {
+  api: {
+    externalResolver: true,
+    bodyParser: false,
+  },
+}
+
 const verifyRecaptcha = async (token: string) => {
   const secretKey = process.env.RECAPTCHA_SECRET_KEY;
 
