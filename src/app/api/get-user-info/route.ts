@@ -54,9 +54,9 @@ export async function POST(request: NextRequest) {
         headers,
       });
 
-      console.log("response:", response)
+      console.log('response:', response);
       // if (!response.ok) {
-        return new Response(JSON.stringify({ error: response }), { status: 400 });
+      return new Response(JSON.stringify({ error: response }), { status: 400 });
       // }
 
       const result = await response.json();
