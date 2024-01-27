@@ -52,9 +52,9 @@ const Home: React.FC = () => {
       const response = await fetch('/api/get-user-info', {
         method: 'POST',
         headers: {
-          ...REQUEST_HEADER,
           Accept: 'application/json, text/plain, */*',
           'Content-Type': 'application/json',
+          ...REQUEST_HEADER,
         },
         body: JSON.stringify({ username: username, token }),
       });
