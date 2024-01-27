@@ -4,36 +4,9 @@ const nextConfig = {
     return [
       {
         source: '/api/get-user-info',
-        has: [
-          {
-            type: 'header',
-            key: 'x-ig-app-id',
-            value: '936619743392459',
-          },
-          {
-            type: 'header',
-            key: 'User-Agent',
-            value: 'iphone_ua',
-          },
-          {
-            type: 'header',
-            key: 'sec-fetch-dest',
-            value: 'empty',
-          },
-          {
-            type: 'header',
-            key: 'sec-fetch-mode',
-            value: 'cors',
-          },
-          {
-            type: 'header',
-            key: 'sec-fetch-site',
-            value: 'same-origin',
-          },
-        ],
-        destination: 'https://i.instagram.com/api/v1/users/web_profile_info/?username=:username',
+        destination: 'https://i.instagram.com/api/v1/users/web_profile_info/:username',
       },
-    ]
+    ];
   },
   webpack(config) {
     // Grab the existing rule that handles SVG imports
