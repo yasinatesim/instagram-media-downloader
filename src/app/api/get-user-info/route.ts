@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
         headers,
       });
 
-      console.log("response:", await response.json() )
+      console.log('response:', await response.json());
       if (!response.ok) {
         return new Response(JSON.stringify({ error: response }), { status: 400 });
       }
