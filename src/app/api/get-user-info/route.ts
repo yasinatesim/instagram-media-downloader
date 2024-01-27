@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
         headers,
       });
 
-      console.log('response:', response);
+      console.log('response:', JSON.stringify(response));
       if (!response.ok) {
         return new Response(JSON.stringify({ error: response }), { status: 400 });
       }
