@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
         headers,
       });
 
-      //      return new Response(JSON.stringify({ error: await response.text() }), { status: 200 });
+           return new Response(JSON.stringify({ error: await response.text() }), { status: 200 });
       if (!response.ok) {
         return new Response(JSON.stringify({ error: response }), { status: 400 });
       }
