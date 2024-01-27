@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
     const recaptchaResponse = await verifyRecaptcha(token);
 
     if (recaptchaResponse.success && recaptchaResponse.score >= 0.5) {
-      const url = `https://i.instagram.com/api/v1/users/web_profile_info/?username=${username}`;
+      const url = `https://www.instagram.com/api/v1/users/web_profile_info/?username=${username}`;
       const headers = {
         ...REQUEST_HEADER,
       };
