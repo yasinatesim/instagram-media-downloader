@@ -38,6 +38,7 @@ export async function POST(request: NextRequest) {
     }
 
     const recaptchaResponse = await verifyRecaptcha(token);
+    console.log("recaptchaResponse:", recaptchaResponse)
 
     if (recaptchaResponse.success && recaptchaResponse.score >= 0.5) {
       const url = `https://i.instagram.com/api/v1/users/web_profile_info/?username=${username}`;
@@ -53,17 +54,20 @@ export async function POST(request: NextRequest) {
         headers,
       });
 
+      console.log("response:", response)
       if (!response.ok) {
         return new Response(JSON.stringify({ error: response }), { status: 400 });
       }
 
       const result = await response.json();
+      console.log("result:", result)
 
       if (result && result.data && result.data.user) {
         const data = {
           userId: result.data.user.id,
         };
 
+        console.log("data:", data)
         return new Response(JSON.stringify(data), { status: 200 });
       } else {
         return new Response(JSON.stringify({ error: 'User not found' }), { status: 400 });
