@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 
 import { REQUEST_HEADER } from '@/constants/requests';
 
@@ -31,7 +31,7 @@ const verifyRecaptcha = async (token: string) => {
   }
 };
 
-export async function POST(request: NextRequest, response: NextResponse) {
+export async function POST(request: NextRequest) {
   try {
     const { username, token } = await request.json();
 
