@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
 
       //      return new Response(JSON.stringify({ error: await response.text() }), { status: 200 });
       if (!response.ok) {
-        return new Response(JSON.stringify({ error: response }), { status: 200 });
+        return new Response(JSON.stringify({ error: response }), { status: 400 });
       }
 
       const result = await response.json();
@@ -68,10 +68,10 @@ export async function POST(request: NextRequest) {
 
         return new Response(JSON.stringify(data), { status: 200 });
       } else {
-        return new Response(JSON.stringify({ error: 'User not found' }), { status: 200 });
+        return new Response(JSON.stringify({ error: 'User not found' }), { status: 400 });
       }
     }
   } catch (error) {
-    return new Response(JSON.stringify({ error: (error as Error).message }), { status: 200 });
+    return new Response(JSON.stringify({ error: (error as Error).message }), { status: 400 });
   }
 }

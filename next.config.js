@@ -4,7 +4,7 @@ const nextConfig = {
     return [
       {
         source: '/api/get-user-info',
-        destination: 'https://i.instagram.com/api/v1/users/web_profile_info/:username',
+        destination: 'https://i.instagram.com/api/v1/users/web_profile_info?username=:username',
       },
     ];
   },
