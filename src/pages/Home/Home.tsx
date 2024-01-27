@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
+import axios from 'axios';
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import toast from 'react-hot-toast';
 
@@ -39,7 +40,6 @@ const Home: React.FC = () => {
   const getInstagramUserId = async (username: string) => {
     if (!executeRecaptcha) {
       toast.error('Execute recaptcha not available yet');
-
       return;
     }
 
@@ -49,23 +49,24 @@ const Home: React.FC = () => {
         throw new Error('Unable to retrieve reCAPTCHA token.');
       }
 
-      const response = await fetch('/api/get-user-info', {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json, text/plain, */*',
-          'Content-Type': 'application/json',
-          ...REQUEST_HEADER,
-        },
-        body: JSON.stringify({ username: username, token }),
-      });
+      const response = await axios.post(
+        '/api/get-user-info',
+        { username, token },
+        {
+          headers: {
+            Accept: 'application/json, text/plain, */*',
+            'Content-Type': 'application/json',
+            ...REQUEST_HEADER,
+          },
+        }
+      );
 
-      if (!response.ok) {
+      if (!response.data) {
         console.error('Error:', response.statusText);
         return null;
       }
 
-      const data = await response.json();
-      return data.userId;
+      return response.data.userId;
     } catch (error) {
       console.error('Error:', error);
     }
