@@ -61,7 +61,6 @@ const Home: React.FC = () => {
           headers: {
             'Content-Type': 'application/json',
             Accept: 'application/json, text/plain, */*',
-            ...dynamicHeaders,
           },
           maxBodyLength: Infinity,
           maxRedirects: 0,
