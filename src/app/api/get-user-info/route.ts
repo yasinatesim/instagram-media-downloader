@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
     const { username, token } = await request.json();
 
     if (typeof username !== 'string') {
-      return new Response(JSON.stringify({ error: 'Invalid username format' }), { status: 400 });
+      throw new Error('Invalid username format');
     }
 
     const recaptchaResponse = await verifyRecaptcha(token);
@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
 
           return new Response(JSON.stringify(data), { status: 200 });
         } else {
-          return new Response(JSON.stringify({ error: 'User not found' }), { status: 400 });
+          throw new Error('User not found');
         }
       } catch (error) {
         console.error('Request error:', (error as Error).message);

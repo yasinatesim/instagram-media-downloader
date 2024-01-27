@@ -63,11 +63,6 @@ const Home: React.FC = () => {
         body: JSON.stringify({ username: username, token }),
       });
 
-      if (!response.ok) {
-        console.error('Error:', response.statusText);
-        return null;
-      }
-
       const data = await response.json();
       return data.userId;
     } catch (error) {
@@ -104,14 +99,18 @@ const Home: React.FC = () => {
 
             const userId = await getInstagramUserId(username);
 
-            finalUrl = INSTAGRAM_GRAPHQL_URL_FOR_STORIES.replace('<USER_ID>', userId as any);
+            if (userId) {
+              finalUrl = INSTAGRAM_GRAPHQL_URL_FOR_STORIES.replace('<USER_ID>', userId as any);
+            }
           } else {
             const usernameMatch = url.match(INSTAGRAM_USERNAME_REGEX_FOR_PROFILE);
             const username: any = usernameMatch && usernameMatch[1];
 
             const userId = await getInstagramUserId(username);
 
-            finalUrl = INSTAGRAM_GRAPHQL_URL_FOR_STORIES.replace('<USER_ID>', userId as any);
+            if (userId) {
+              finalUrl = INSTAGRAM_GRAPHQL_URL_FOR_STORIES.replace('<USER_ID>', userId as any);
+            }
           }
           if (finalUrl) {
             setGeneratedUrl(finalUrl);
