@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react';
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import toast from 'react-hot-toast';
 
+import axios from 'axios';
+
 import {
   INSTAGRAM_HIGHLIGHT_ID_REGEX,
   INSTAGRAM_HIGHLIGHTSPAGE_REGEX,
@@ -41,7 +43,6 @@ const Home: React.FC = () => {
   const getInstagramUserId = async (username: string) => {
     if (!executeRecaptcha) {
       toast.error('Execute recaptcha not available yet');
-
       return;
     }
 
@@ -53,17 +54,21 @@ const Home: React.FC = () => {
 
       const dynamicHeaders = generateDynamicHeaders();
 
-      const response = await fetch('/api/get-user-info', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...REQUEST_HEADER,
-          ...dynamicHeaders,
-        },
-        body: JSON.stringify({ username: username, token }),
-      });
+      const response = await axios.post(
+        '/api/get-user-info',
+        { username, token },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json, text/plain, */*',
+            ...dynamicHeaders,
+          },
+          maxBodyLength: Infinity,
+          maxRedirects: 0,
+        }
+      );
 
-      const data = await response.json();
+      const data = response.data;
       return data.userId;
     } catch (error) {
       console.error('Error:', error);
