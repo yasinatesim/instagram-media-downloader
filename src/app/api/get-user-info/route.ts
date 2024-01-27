@@ -1,5 +1,7 @@
 import { NextRequest } from 'next/server';
 
+import axios from 'axios';
+
 import { REQUEST_HEADER } from '@/constants/requests';
 
 import generateDynamicHeaders from '@/utils/generateDynamicHeaders';
@@ -14,19 +16,21 @@ const verifyRecaptcha = async (token: string) => {
   const verificationUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${token}`;
 
   try {
-    const response = await fetch(verificationUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    const response = await axios.post(
+      verificationUrl,
+      {},
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
 
-    if (!response.ok) {
-      throw new Error(`Recaptcha verification failed with status: ${response.status}`);
+    if (!response.data.success || response.data.score < 0.5) {
+      throw new Error('Recaptcha verification failed');
     }
 
-    const data = await response.json();
-    return data;
+    return response.data;
   } catch (error) {
     console.error('Recaptcha verification error:', (error as Error).message);
     throw error;
@@ -52,25 +56,27 @@ export async function POST(request: NextRequest) {
         ...dynamicHeaders,
       };
 
-      const response = await fetch(url, {
-        headers,
-      });
+      try {
+        const response = await axios.get(url, { headers });
 
-      return new Response(JSON.stringify({ error: await response.text() }), { status: 200 });
-      if (!response.ok) {
-        return new Response(JSON.stringify({ error: response }), { status: 400 });
-      }
+        if (response.status !== 200) {
+          throw new Error(`Request failed with status: ${response.status}`);
+        }
 
-      const result = await response.json();
+        const result = response.data;
 
-      if (result && result.data && result.data.user) {
-        const data = {
-          userId: result.data.user.id,
-        };
+        if (result && result.data && result.data.user) {
+          const data = {
+            userId: result.data.user.id,
+          };
 
-        return new Response(JSON.stringify(data), { status: 200 });
-      } else {
-        return new Response(JSON.stringify({ error: 'User not found' }), { status: 400 });
+          return new Response(JSON.stringify(data), { status: 200 });
+        } else {
+          return new Response(JSON.stringify({ error: 'User not found' }), { status: 400 });
+        }
+      } catch (error) {
+        console.error('Request error:', (error as Error).message);
+        throw error;
       }
     }
   } catch (error) {
