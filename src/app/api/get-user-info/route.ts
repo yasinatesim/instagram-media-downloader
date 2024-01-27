@@ -4,51 +4,73 @@ export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 export const fetchCache = 'default-no-store';
 
-export async function GET(request: NextRequest) {
+const verifyRecaptcha = async (token: string) => {
+  const secretKey = process.env.RECAPTCHA_SECRET_KEY;
+
+  const verificationUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${token}`;
+
   try {
-    const { searchParams } = new URL(request.url);
-    const username = searchParams.get('username');
-
-    const url = `https://i.instagram.com/api/v1/users/web_profile_info/?username=${username}`;
-    const headers = {
-      'User-Agent': 'iphone_ua',
-      'x-ig-app-id': `936619743392459`,
-      'sec-fetch-dest': 'empty',
-      'sec-fetch-mode': 'cors',
-      'sec-fetch-site': 'same-origin',
-    };
-
-    const response = await fetch(url, {
-      headers,
+    const response = await fetch(verificationUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
     });
 
     if (!response.ok) {
-      return Response.json(
-        {
-          error: 'error 1',
-        },
-        { status: 400 }
-      );
+      throw new Error(`Recaptcha verification failed with status: ${response.status}`);
     }
 
-    const result = await response.json();
-    // console.log("result:", result)
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Recaptcha verification error:', (error as Error).message);
+    throw error;
+  }
+};
 
-    if (result && result.data && result.data.user) {
-      const data = {
-        userId: result.data.user.id,
+export async function POST(request: NextRequest) {
+  try {
+    const { username, token } = await request.json();
+
+    if (typeof username !== 'string') {
+      return new Response(JSON.stringify({ error: 'Invalid username format' }), { status: 400 });
+    }
+
+    const recaptchaResponse = await verifyRecaptcha(token);
+
+    console.log('recaptchaResponse.data:', recaptchaResponse);
+    if (recaptchaResponse.success && recaptchaResponse.score >= 0.5) {
+      const url = `https://i.instagram.com/api/v1/users/web_profile_info/?username=${username}`;
+      const headers = {
+        'User-Agent': 'iphone_ua',
+        'x-ig-app-id': '936619743392459',
+        'sec-fetch-dest': 'empty',
+        'sec-fetch-mode': 'cors',
+        'sec-fetch-site': 'same-origin',
       };
 
-      return Response.json(data, { status: 200 });
-    } else {
-      return Response.json(
-        {
-          error: 'error',
-        },
-        { status: 400 }
-      );
+      const response = await fetch(url, {
+        headers,
+      });
+
+      if (!response.ok) {
+        return new Response(JSON.stringify({ error: 'error 1' }), { status: 400 });
+      }
+
+      const result = await response.json();
+
+      if (result && result.data && result.data.user) {
+        const data = {
+          userId: result.data.user.id,
+        };
+
+        return new Response(JSON.stringify(data), { status: 200 });
+      } else {
+        return new Response(JSON.stringify({ error: 'User not found' }), { status: 400 });
+      }
     }
   } catch (error) {
-    return Response.json(error, { status: 400 });
+    return new Response(JSON.stringify({ error: (error as Error).message }), { status: 500 });
   }
 }

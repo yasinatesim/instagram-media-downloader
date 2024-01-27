@@ -1,9 +1,9 @@
 import React from 'react';
+import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
 import { Toaster } from 'react-hot-toast';
 
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import { headers } from 'next/headers';
 
 import GithubCorner from '@/components/GithubCorner';
 

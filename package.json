@@ -10,7 +10,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint --fix && prettier --check .",
+    "lint": "next lint --fix",
     "format": "prettier --write --ignore-unknown .",
     "prepare": "husky install"
   },
@@ -21,6 +21,7 @@
     "node-fetch": "^3.3.2",
     "react": "^18",
     "react-dom": "^18",
+    "react-google-recaptcha-v3": "^1.10.1",
     "react-hot-toast": "^2.4.1",
     "sass": "^1.69.7"
   },

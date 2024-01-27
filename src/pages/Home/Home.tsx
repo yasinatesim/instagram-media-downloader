@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import toast from 'react-hot-toast';
 
 import {
@@ -27,6 +28,7 @@ import styles from './Home.module.scss';
 
 const Home: React.FC = () => {
   const { isCopied, copyToClipboard } = useCopyToClipboard();
+  const { executeRecaptcha } = useGoogleReCaptcha();
 
   const [url, setUrl] = useState('');
   const [generatedUrl, setGeneratedUrl] = useState('');
@@ -34,8 +36,32 @@ const Home: React.FC = () => {
   const [processedData, setProcessedData] = useState<any>(null);
 
   const getInstagramUserId = async (username: string) => {
+    if (!executeRecaptcha) {
+      toast.error('Execute recaptcha not available yet');
+
+      return;
+    }
+
     try {
-      const response = await fetch(`/api/get-user-info?username=${encodeURIComponent(username)}`);
+      const token = await executeRecaptcha();
+      if (!token) {
+        throw new Error('Unable to retrieve reCAPTCHA token.');
+      }
+
+      const response = await fetch('/api/get-user-info', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json, text/plain, */*',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username: username, token }),
+      });
+
+      if (!response.ok) {
+        console.error('Error:', response.statusText);
+        return null;
+      }
+
       const data = await response.json();
       return data.userId;
     } catch (error) {
