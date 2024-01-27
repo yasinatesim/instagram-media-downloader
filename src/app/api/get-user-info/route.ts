@@ -11,7 +11,7 @@ export const config = {
     externalResolver: true,
     bodyParser: false,
   },
-}
+};
 
 const verifyRecaptcha = async (token: string) => {
   const secretKey = process.env.RECAPTCHA_SECRET_KEY;
