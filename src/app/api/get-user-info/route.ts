@@ -32,11 +32,6 @@ const verifyRecaptcha = async (token: string) => {
 };
 
 export async function POST(request: NextRequest, response: NextResponse) {
-  Object.entries(REQUEST_HEADER).forEach(([key, value]) => {
-    // @ts-ignore
-    response.setHeader(`${key}`, `${value}`);
-  });
-
   try {
     const { username, token } = await request.json();
 
