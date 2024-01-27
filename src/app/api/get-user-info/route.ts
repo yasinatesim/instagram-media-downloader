@@ -1,7 +1,5 @@
 import { NextRequest } from 'next/server';
 
-import axios from 'axios';
-
 import { REQUEST_HEADER } from '@/constants/requests';
 
 export const dynamic = 'force-dynamic';
@@ -14,21 +12,19 @@ const verifyRecaptcha = async (token: string) => {
   const verificationUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${token}`;
 
   try {
-    const response = await axios.post(
-      verificationUrl,
-      {},
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+    const response = await fetch(verificationUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
-    if (!response.data.success) {
+    if (!response.ok) {
       throw new Error(`Recaptcha verification failed with status: ${response.status}`);
     }
 
-    return response.data;
+    const data = await response.json();
+    return data;
   } catch (error) {
     console.error('Recaptcha verification error:', (error as Error).message);
     throw error;
@@ -51,27 +47,25 @@ export async function POST(request: NextRequest) {
         ...REQUEST_HEADER,
       };
 
-      try {
-        const response = await axios.get(url, { headers });
+      const response = await fetch(url, {
+        headers,
+      });
 
-        if (!response.data) {
-          throw new Error(`Instagram API request failed with status: ${response.status}`);
-        }
+      //      return new Response(JSON.stringify({ error: await response.text() }), { status: 200 });
+      if (!response.ok) {
+        return new Response(JSON.stringify({ error: response }), { status: 400 });
+      }
 
-        const result = response.data;
+      const result = await response.json();
 
-        if (result && result.data && result.data.user) {
-          const data = {
-            userId: result.data.user.id,
-          };
+      if (result && result.data && result.data.user) {
+        const data = {
+          userId: result.data.user.id,
+        };
 
-          return new Response(JSON.stringify(data), { status: 200 });
-        } else {
-          return new Response(JSON.stringify({ error: 'User not found' }), { status: 400 });
-        }
-      } catch (error) {
-        console.error('Instagram API request error:', (error as Error).message);
-        return new Response(JSON.stringify({ error: (error as Error).message }), { status: 400 });
+        return new Response(JSON.stringify(data), { status: 200 });
+      } else {
+        return new Response(JSON.stringify({ error: 'User not found' }), { status: 400 });
       }
     }
   } catch (error) {
