@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
     const dynamicHeaders = generateDynamicHeaders();
 
     if (recaptchaResponse.success && recaptchaResponse.score >= 0.5) {
-      const url = `https://www.instagram.com/api/v1/users/web_profile_info/?username=${username}`;
+      const url = `https://i.instagram.com/api/v1/users/web_profile_info/?username=${username}`;
       const headers = {
         Accept: 'application/json, text/plain, */*',
         'User-Agent':
