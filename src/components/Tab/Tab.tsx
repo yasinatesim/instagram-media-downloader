@@ -36,6 +36,7 @@ const Tab: React.FC<TabProps> & { Content: React.FC<ContentProps> } = ({ childre
                 }),
               }}
             >
+              {/* @ts-ignore */}
               {content.props.tab}
             </Button>
           </div>
