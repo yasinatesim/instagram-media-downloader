@@ -168,7 +168,7 @@ Simplify your media saving experience! No login, no hassle. Enjoy Instagram cont
 
 
 ### Instagram Full Size Profile Picture Downloader
-
+Allows you to easily retrieve and download high-resolution profile pictures from Instagram. Whether you want to save your own profile picture or download someone else's, this tool simplifies the process, providing you with a hassle-free way to access and store full-size profile images. Enjoy the convenience of quickly obtaining Instagram profile pictures for various purposes with this efficient downloader.
 
 ## Getting Started
 
