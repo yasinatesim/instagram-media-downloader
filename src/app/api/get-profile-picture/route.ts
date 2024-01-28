@@ -2,10 +2,9 @@ import { NextRequest } from 'next/server';
 
 import { IgApiClient, IgLoginRequiredError } from 'instagram-private-api';
 
+import { getInstagramUserId } from '@/services/instagram';
 import { deleteSessionData, initializeInstagramApi, loginToInstagram } from '@/services/login-instagram';
 import verifyRecaptcha, { RECAPTCHA_THRESHOLD } from '@/services/verify-recaptcha';
-
-import { getInstagramUserId } from '../get-user-id/route';
 
 export async function POST(request: NextRequest) {
   try {
