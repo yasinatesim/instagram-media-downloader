@@ -9,6 +9,13 @@ import verifyRecaptcha, { RECAPTCHA_THRESHOLD } from '@/services/verify-recaptch
 
 import generateDynamicHeaders from '@/utils/src/utils/generateDynamicHeaders';
 
+// Todo: Implement this
+// https://www.instagram.com/graphql/query/?query_id=17888483320059182&id={user_id}&first=24
+
+// Todo: Implement this
+// https://www.instagram.com/web/search/topsearch/?context=blended&query={username}&rank_token=0.3953592318270893&count=1
+// the api use sessionid cookie
+
 export async function POST(request: NextRequest) {
   try {
     const { username, token } = await request.json();
@@ -40,6 +47,7 @@ export async function POST(request: NextRequest) {
         }
 
         const result = response.data;
+        console.log('result:', result);
 
         if (result && result.data && result.data.user) {
           return new Response(
