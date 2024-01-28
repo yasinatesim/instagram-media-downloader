@@ -1,13 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  async rewrites() {
-    return [
-      {
-        source: '/api/get-profile-picture',
-        destination: 'https://instagram.fsaw2-1.fna.fbcdn.net',
-      },
-    ];
-  },
+  // async rewrites() {
+  //   return [
+  //     {
+  //       source: '/api/get-user-info',
+  //       destination: 'https://i.instagram.com/api/v1/users/web_profile_info?username=:username',
+  //     },
+  //   ];
+  // },
   webpack(config) {
     // Grab the existing rule that handles SVG imports
     const fileLoaderRule = config.module.rules.find((rule) => rule.test?.test?.('.svg'));

@@ -42,7 +42,7 @@ const Home: React.FC = () => {
   const [jsonInput, setJsonInput] = useState('');
   const [profilePicture, setProfilePicture] = useState<any>(null);
   const [processedData, setProcessedData] = useState<any>(null);
-  const prevUrlRef = useRef<string>('');
+  const [prevUrl, setPrevUrl] = useState<any>(null);
 
   const getInstagramUserId = async (username: string) => {
     if (!executeRecaptcha) {
@@ -76,6 +76,8 @@ const Home: React.FC = () => {
   };
 
   const handleGenerateUrl = async () => {
+    setPrevUrl(url);
+
     if (!url) {
       toast.error('Please provide a URL');
       return;
@@ -89,7 +91,7 @@ const Home: React.FC = () => {
 
         let finalUrl;
 
-        if (url !== prevUrlRef.current) {
+        if (url !== prevUrl) {
           if (url.includes('instagram')) {
             if (url.includes(`${INSTAGRAM_POSTPAGE_REGEX}`) || url.includes(`${INSTAGRAM_REELSPAGE_REGEX}`)) {
               finalUrl = `${url}${INSTAGRAM_URL_PARAMS}`;
@@ -120,7 +122,6 @@ const Home: React.FC = () => {
             }
             if (finalUrl) {
               setGeneratedUrl(finalUrl);
-              prevUrlRef.current = url;
             } else {
               toast.error('Failed to generate URL. Please check the input and try again.');
             }
