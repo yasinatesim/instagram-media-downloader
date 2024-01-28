@@ -17,7 +17,7 @@ interface ContentProps {
 }
 
 const Tab: React.FC<TabProps> & { Content: React.FC<ContentProps> } = ({ children }) => {
-  const [activeIndex, setActiveIndex] = useState(1);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const contents = React.Children.toArray(children).filter((c: any) => c.type === Tab.Content);
 
