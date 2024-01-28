@@ -6,6 +6,8 @@ import IconImage from '@/assets/icons/icon-image.svg';
 import IconVideo from '@/assets/icons/icon-video.svg';
 import IconVideoPreview from '@/assets/icons/icon-video-preview.svg';
 
+import fetchProxyImage from '@/services/fetch-proxy-image';
+
 import styles from './Card.module.scss';
 
 type Props = {
@@ -18,17 +20,13 @@ type Props = {
 const Card: React.FC<Props> = ({ index, imageUrl, hasVideo, videoUrl }) => {
   const [proxyImageUrl, setProxyImageUrl] = useState<string | null>(null);
 
-  const fetchProxyImage = async () => {
-    const response = await fetch(`/api/proxy-image?imageUrl=${encodeURIComponent(imageUrl)}`);
-    const data = await response.json();
-
-    if (data.imageUrlBase64) {
-      setProxyImageUrl(data.imageUrlBase64);
-    }
+  const handleFetchProxyImage = async () => {
+    const data = await fetchProxyImage(imageUrl);
+    setProxyImageUrl(data);
   };
 
   useEffect(() => {
-    fetchProxyImage();
+    handleFetchProxyImage();
   }, [imageUrl]);
 
   return (

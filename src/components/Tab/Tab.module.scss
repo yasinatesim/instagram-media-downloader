@@ -1,0 +1,10 @@
+/* Tab.module.scss */
+.buttons {
+  display: flex;
+	gap: 12px;
+}
+
+.active {
+  background-color: #007bff;
+  color: #fff;
+}

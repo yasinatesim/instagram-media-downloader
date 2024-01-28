@@ -22,6 +22,7 @@ Instagram Media Downloader
 Effortlessly download Instagram reels, stories, and posts with our user-friendly app. No login needed! 🚀
 
 **Features:**
+- **Profile Picture:**  Instantly download full size Instagram profile pictures.
 - **Story Download:** Easily save your favorite stories.
 - **Highlights Download:** Save Instagram highlights effortlessly.
 - **Post Download:** Download Instagram posts hassle-free.
@@ -35,6 +36,10 @@ Simplify your media saving experience! No login, no hassle. Enjoy Instagram cont
 
 <table>
 
+  <tr>
+    <td> <a href="https://github.com/dilame/instagram-private-api">dilame/instagram-private-api</a></td>
+    <td>NodeJS Instagram private API SDK. Written in TypeScript.</td>
+  </tr>
 <tr>
 
 <td>
@@ -142,6 +147,8 @@ Simplify your media saving experience! No login, no hassle. Enjoy Instagram cont
 
 ## 🧐 What's inside?
 
+### Instagram Story, Highlight, Reels and Post Downloader
+
 1. Copy Instagram URL
 
    ![Step 1](./src/assets/images/how-to-use-1.jpg)
@@ -159,6 +166,10 @@ Simplify your media saving experience! No login, no hassle. Enjoy Instagram cont
    ![Step 4](./src/assets/images/how-to-use-4.jpg)
 
 
+
+### Instagram Full Size Profile Picture Downloader
+
+
 ## Getting Started
 
 ### 📦 Prerequisites
@@ -166,8 +177,6 @@ Simplify your media saving experience! No login, no hassle. Enjoy Instagram cont
 - Node (v18.17.0+)
 
 - Npm (v9.0.0+)
-
-
 
 ### ⚙️ How To Use
 
@@ -180,7 +189,45 @@ git clone https://github.com/yasinatesim/instagram-media-downloader.git
 
 ```
 
-2. Install the project dependencies
+
+
+2. Add .env file on root
+
+```bash
+
+# Your Firebase - Firestore Database info -> https://console.firebase.google.com/
+NEXT_PUBLIC_FIREBASE_PRIVATE_KEY=
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=
+NEXT_PUBLIC_FIREBASE_CLIENT_EMAIL=
+
+# You need Google Recaptcha token for below field and you should add *localhost* domain in Google Recaptcha console "Domains" section
+# https://www.google.com/recaptcha/admin/create
+NEXT_PUBLIC_RECAPTCHA_SITE_KEY=
+RECAPTCHA_SECRET_KEY=
+
+
+# You need an Instagram account, please enter your Instagram account Username and Password
+IG_USERNAME=
+IG_PASSWORD=
+
+# You need Instagram device string, please choose one on this link -> https://github.com/dilame/instagram-private-api/blob/623a348343e34058c3a286693740aa3698aed3cc/src/samples/devices.json
+
+IG_DEVICE_STRING=
+
+# The project uses to dilame/instagram-private-api.The library has `generateDevice` function and the function return the below fields. Please run this function in the dilame/instagram-private-api project and enter the below fields
+
+# https://github.com/dilame/instagram-private-api/blob/623a348343e34058c3a286693740aa3698aed3cc/src/core/state.ts#L245
+IG_DEVICE_ID=
+IG_UUID=
+IG_PHONE_ID=
+IG_ADID=
+IG_BUILD=
+
+```
+
+
+
+3. Install the project dependencies
 
 ```bash
 

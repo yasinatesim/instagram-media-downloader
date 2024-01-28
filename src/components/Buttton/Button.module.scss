@@ -1,0 +1,16 @@
+.container {
+  border: 0;
+  padding: 10px;
+  margin-bottom: 5px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.secondary {
+  color: #fff;
+  background-color: #3498db;
+  &:disabled {
+    background-color: #96d5ff;
+    cursor: not-allowed;
+  }
+}
