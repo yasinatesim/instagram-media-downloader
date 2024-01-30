@@ -69,6 +69,7 @@ const Home: React.FC = () => {
       );
 
       const data = response.data;
+
       return data.userId;
     } catch (error: any) {
       toast.error(`API error: ${error.response?.data.error.message ?? error.message}`);
