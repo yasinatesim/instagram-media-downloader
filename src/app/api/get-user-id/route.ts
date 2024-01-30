@@ -5,6 +5,8 @@ import * as cheerio from 'cheerio';
 
 import verifyRecaptcha, { RECAPTCHA_THRESHOLD } from '@/services/verify-recaptcha';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: NextRequest) {
   const { username, token } = await request.json();
 
