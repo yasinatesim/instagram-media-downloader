@@ -57,17 +57,17 @@ export async function loginToInstagram() {
         ig.state.build = savedCookie.build;
       }
     } else {
+      ig.state.deviceString = process.env.IG_DEVICE_STRING as string;
+      ig.state.deviceId = process.env.IG_DEVICE_ID as string;
+      ig.state.uuid = process.env.IG_UUID as string;
+      ig.state.phoneId = process.env.IG_PHONE_ID as string;
+      ig.state.adid = process.env.IG_ADID as string;
+      ig.state.build = process.env.IG_BUILD as string;
+
       await ig.account.login(process.env.IG_USERNAME as string, process.env.IG_PASSWORD as string);
       const serialized = await ig.state.serialize();
       delete serialized.constants;
       await saveSessionData(serialized);
-
-      ig.state.deviceString = serialized.deviceString;
-      ig.state.deviceId = serialized.deviceId;
-      ig.state.uuid = serialized.uuid;
-      ig.state.phoneId = serialized.phoneId;
-      ig.state.adid = serialized.adid;
-      ig.state.build = serialized.build;
     }
 
     return ig;

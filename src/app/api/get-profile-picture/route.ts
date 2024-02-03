@@ -19,8 +19,10 @@ export async function POST(request: NextRequest) {
     if (recaptchaResponse.success && recaptchaResponse.score >= RECAPTCHA_THRESHOLD) {
       const ig = await loginToInstagram();
 
+      ///api/v1/users/search/ q=username&count=30 timezone_offset=  String(new Date().getTimezoneOffset() * -60)
       const userId = await getInstagramUserId(ig, username);
 
+      // /api/v1/users/${id}/info/
       const { url } = (await ig.user.info(userId)).hd_profile_pic_url_info;
 
       return new Response(
