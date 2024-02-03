@@ -1,13 +1,11 @@
 import { NextRequest } from 'next/server';
 
 import axios from 'axios';
-import { IgLoginRequiredError } from 'instagram-private-api';
 
-import { getInstagramUserId } from '@/services/instagram';
-import { deleteSessionData, initializeInstagramApi, loginToInstagram } from '@/services/login-instagram';
+import { loadSessionData } from '@/services/login-instagram';
 import verifyRecaptcha, { RECAPTCHA_THRESHOLD } from '@/services/verify-recaptcha';
 
-import generateDynamicHeaders from '@/utils/src/utils/generateDynamicHeaders';
+import convertCookiesToCookieString from '@/utils/src/utils/convertCookiesToCookieString';
 
 // Todo: Implement this
 // https://www.instagram.com/graphql/query/?query_id=17888483320059182&id={user_id}&first=24
@@ -26,9 +24,12 @@ export async function POST(request: NextRequest) {
 
     const recaptchaResponse = await verifyRecaptcha(token);
 
+    const savedCookie = await loadSessionData();
+
+    const cookieString = convertCookiesToCookieString(JSON.parse(savedCookie?.cookies));
+
     if (recaptchaResponse.success && recaptchaResponse.score >= RECAPTCHA_THRESHOLD) {
       try {
-        const dynamicHeaders = generateDynamicHeaders();
         const url = `https://i.instagram.com/api/v1/users/web_profile_info/?username=${username}`;
         const headers = {
           Accept: 'application/json, text/plain, */*',
@@ -37,7 +38,9 @@ export async function POST(request: NextRequest) {
           'sec-fetch-dest': 'empty',
           'sec-fetch-mode': 'cors',
           'sec-fetch-site': 'same-origin',
-          ...dynamicHeaders,
+          'x-asbd-id': '46548741',
+          'X-IG-App-ID': '936619743392459',
+          cookie: cookieString,
         };
 
         const response = await axios.get(url, { headers, maxBodyLength: Infinity, maxRedirects: 0 });
@@ -47,7 +50,6 @@ export async function POST(request: NextRequest) {
         }
 
         const result = response.data;
-        console.log('result:', result);
 
         if (result && result.data && result.data.user) {
           return new Response(
@@ -61,29 +63,19 @@ export async function POST(request: NextRequest) {
         console.error('Instagram API request failed. Falling back to alternative method.', error);
       }
 
-      const ig = await initializeInstagramApi();
-      await loginToInstagram(ig);
+      // const ig = await loginToInstagram();
 
-      const userId = await getInstagramUserId(ig, username);
+      // const userId = await getInstagramUserId(ig, username);
 
-      return new Response(
-        JSON.stringify({
-          userId,
-        }),
-        { status: 200 }
-      );
+      // return new Response(
+      //   JSON.stringify({
+      //     userId,
+      //   }),
+      //   { status: 200 }
+      // );
     }
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Something went wrong';
-    /**
-     * login_required error
-     * "Please wait a few minutes before you try again." error
-     */
-    if (error instanceof IgLoginRequiredError || errorMessage.includes('few minutes before')) {
-      await deleteSessionData();
-      return new Response(JSON.stringify({ error: errorMessage }), { status: 400 });
-    }
-
     const errorResponse = { status: 'Failed', message: errorMessage };
 
     return new Response(JSON.stringify({ error: errorResponse }), { status: 400 });
