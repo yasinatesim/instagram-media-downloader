@@ -1,4 +1,4 @@
-import { IgApiClient, IgLoginRequiredError } from 'instagram-private-api';
+import { IgApiClient } from 'instagram-private-api';
 
 import db from '@/configs/db';
 
@@ -31,11 +31,17 @@ export async function loadSessionData() {
   }
 }
 
-export async function deleteSessionData() {
+async function deleteSessionData() {
   try {
     await db.collection('data').doc('session').delete();
   } catch (error) {
     console.log('Error deleting session data:', (error as Error).message);
+  }
+}
+
+export async function loginFailedError(error: Error) {
+  if (error.message.includes('login_required') || error.message.includes('few minutes before')) {
+    await deleteSessionData();
   }
 }
 
@@ -72,10 +78,7 @@ export async function loginToInstagram() {
 
     return ig;
   } catch (error) {
-    if (error instanceof IgLoginRequiredError || (error as Error).message.includes('few minutes before')) {
-      await deleteSessionData();
-    }
-
+    await loginFailedError(error as Error);
     throw new Error('Instagram login failed');
   }
 }
