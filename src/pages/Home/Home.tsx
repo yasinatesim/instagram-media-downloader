@@ -84,58 +84,54 @@ const Home: React.FC = () => {
       return;
     }
 
-    try {
-      const urlObj = new URL(url);
+    const urlObj = new URL(url);
 
-      if (urlObj.protocol) {
-        urlObj.search = '';
+    if (urlObj.protocol) {
+      urlObj.search = '';
 
-        let finalUrl;
+      let finalUrl;
 
-        if (url !== prevUrl) {
-          if (url.includes('instagram')) {
-            if (url.includes(`${INSTAGRAM_POSTPAGE_REGEX}`) || url.includes(`${INSTAGRAM_REELSPAGE_REGEX}`)) {
-              finalUrl = `${url}${INSTAGRAM_URL_PARAMS}`;
-            } else if (INSTAGRAM_HIGHLIGHTSPAGE_REGEX.test(url)) {
-              const match = url.match(INSTAGRAM_HIGHLIGHT_ID_REGEX);
+      if (url !== prevUrl) {
+        if (url.includes('instagram')) {
+          if (url.includes(`${INSTAGRAM_POSTPAGE_REGEX}`) || url.includes(`${INSTAGRAM_REELSPAGE_REGEX}`)) {
+            finalUrl = `${url}${INSTAGRAM_URL_PARAMS}`;
+          } else if (INSTAGRAM_HIGHLIGHTSPAGE_REGEX.test(url)) {
+            const match = url.match(INSTAGRAM_HIGHLIGHT_ID_REGEX);
 
-              if (match && match[1]) {
-                finalUrl = INSTAGRAM_GRAPHQL_URL_FOR_HIGHLIGHTS.replace('<HIGHLIGHT_ID>', match[1] as any);
-              }
-            } else if (INSTAGRAM_USERNAME_REGEX_FOR_STORIES.test(url)) {
-              const usernameMatch = url.match(INSTAGRAM_USERNAME_REGEX_FOR_STORIES);
-              const username: any = usernameMatch && usernameMatch[1];
-
-              const userId = await getInstagramUserId(username);
-
-              if (userId) {
-                finalUrl = INSTAGRAM_GRAPHQL_URL_FOR_STORIES.replace('<USER_ID>', userId as any);
-              }
-            } else {
-              const usernameMatch = url.match(INSTAGRAM_USERNAME_REGEX_FOR_PROFILE);
-              const username: any = usernameMatch && usernameMatch[1];
-
-              const userId = await getInstagramUserId(username);
-
-              if (userId) {
-                finalUrl = INSTAGRAM_GRAPHQL_URL_FOR_STORIES.replace('<USER_ID>', userId as any);
-              }
+            if (match && match[1]) {
+              finalUrl = INSTAGRAM_GRAPHQL_URL_FOR_HIGHLIGHTS.replace('<HIGHLIGHT_ID>', match[1] as any);
             }
-            if (finalUrl) {
-              setGeneratedUrl(finalUrl);
-            } else {
-              toast.error('Failed to generate URL. Please check the input and try again.');
+          } else if (INSTAGRAM_USERNAME_REGEX_FOR_STORIES.test(url)) {
+            const usernameMatch = url.match(INSTAGRAM_USERNAME_REGEX_FOR_STORIES);
+            const username: any = usernameMatch && usernameMatch[1];
+
+            const userId = await getInstagramUserId(username);
+
+            if (userId) {
+              finalUrl = INSTAGRAM_GRAPHQL_URL_FOR_STORIES.replace('<USER_ID>', userId as any);
             }
           } else {
-            toast.error('Invalid URL. Must be an Instagram URL.');
+            const usernameMatch = url.match(INSTAGRAM_USERNAME_REGEX_FOR_PROFILE);
+            const username: any = usernameMatch && usernameMatch[1];
+
+            const userId = await getInstagramUserId(username);
+
+            if (userId) {
+              finalUrl = INSTAGRAM_GRAPHQL_URL_FOR_STORIES.replace('<USER_ID>', userId as any);
+            }
+          }
+          if (finalUrl) {
+            setGeneratedUrl(finalUrl);
+          } else {
+            toast.error('Failed to generate URL. Please check the input and try again.');
           }
         } else {
-          toast.error('The URL cannot be the same as the previous one');
+          toast.error('Invalid URL. Must be an Instagram URL.');
         }
       } else {
-        toast.error('Invalid URL format');
+        toast.error('The URL cannot be the same as the previous one');
       }
-    } catch (error) {
+    } else {
       toast.error('Invalid URL format');
     }
   };
