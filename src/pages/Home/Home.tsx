@@ -37,12 +37,17 @@ const Home: React.FC = () => {
   const { executeRecaptcha } = useGoogleReCaptcha();
 
   const [url, setUrl] = useState('');
-  const [username, setUsername] = useState('');
+  const [prevUrl, setPrevUrl] = useState<any>(null);
+
   const [generatedUrl, setGeneratedUrl] = useState('');
   const [jsonInput, setJsonInput] = useState('');
   const [profilePicture, setProfilePicture] = useState<any>(null);
   const [processedData, setProcessedData] = useState<any>(null);
-  const [prevUrl, setPrevUrl] = useState<any>(null);
+
+  // Profile Picture Tab
+  const [username, setUsername] = useState('');
+  const [prevUsername, setPrevUsername] = useState('');
+  const [isLoadingForProfilePicture, setIsLoadingForProfilePicture] = useState(false);
 
   const getInstagramUserId = async (username: string) => {
     if (!executeRecaptcha) {
@@ -142,39 +147,48 @@ const Home: React.FC = () => {
   };
 
   const handleSubmitForProfilePicture = async () => {
-    if (!executeRecaptcha) {
-      toast.error('Execute recaptcha not available yet');
-      return;
-    }
-
-    try {
-      const token = await executeRecaptcha();
-      if (!token) {
-        throw new Error('Unable to retrieve reCAPTCHA token.');
+    if (prevUsername !== username) {
+      if (!executeRecaptcha) {
+        toast.error('Execute recaptcha not available yet');
+        return;
       }
 
-      const response = await axios.post(
-        '/api/get-profile-picture',
-        { username, token },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json, text/plain, */*',
-          },
-          maxRedirects: 0,
+      try {
+        const token = await executeRecaptcha();
+        if (!token) {
+          throw new Error('Unable to retrieve reCAPTCHA token.');
         }
-      );
 
-      const data = response.data;
+        setIsLoadingForProfilePicture(true);
 
-      const image = await fetchProxyImage(data.url);
+        const response = await axios.post(
+          '/api/get-profile-picture',
+          { username, token },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Accept: 'application/json, text/plain, */*',
+            },
+            maxRedirects: 0,
+          }
+        );
 
-      setProfilePicture({
-        image,
-        url: data.url,
-      });
-    } catch (error: any) {
-      toast.error(`API error: ${error.response?.data.error.message ?? error.message}`);
+        const data = response.data;
+
+        const image = await fetchProxyImage(data.url);
+
+        setPrevUsername(username);
+        setProfilePicture({
+          image,
+          url: data.url,
+        });
+        setIsLoadingForProfilePicture(false);
+      } catch (error: any) {
+        toast.error(`API error: ${error.response?.data.error.message ?? error.message}`);
+        setIsLoadingForProfilePicture(false);
+      }
+    } else {
+      toast.error('The username cannot be the same as the previous one');
     }
   };
 
@@ -238,7 +252,11 @@ const Home: React.FC = () => {
             }}
           />
 
-          <Button variant="secondary" disabled={!username} onClick={handleSubmitForProfilePicture}>
+          <Button
+            variant="secondary"
+            disabled={!username || username === prevUsername || isLoadingForProfilePicture}
+            onClick={handleSubmitForProfilePicture}
+          >
             Submit
           </Button>
 

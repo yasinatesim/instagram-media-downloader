@@ -19,15 +19,20 @@ export async function POST(request: NextRequest) {
       try {
         const data = await getUserInfo(username);
 
-        return new Response(
-          JSON.stringify({
-            url: data.hd_profile_pic_url_info.url,
-          }),
-          { status: 200 }
-        );
+        if (data?.hd_profile_pic_url_info?.url) {
+          return new Response(
+            JSON.stringify({
+              url: data.hd_profile_pic_url_info.url,
+            }),
+            { status: 200 }
+          );
+        } else {
+          await loginFailedError({ name: 'login_required', message: 'login_required' });
+          throw new Error('Session expired, please try again');
+        }
       } catch (error) {
         await loginFailedError(error as Error);
-        throw new Error('There is a problem search api');
+        throw new Error((error as Error).message);
       }
     }
   } catch (error) {
