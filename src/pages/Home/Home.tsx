@@ -21,6 +21,8 @@ import {
 
 import { useCopyToClipboard } from '@/hooks';
 
+import IconX from '@/assets/icons/icon-x.svg';
+
 import fetchProxyImage from '@/services/fetch-proxy-image';
 
 import Button from '@/components/Buttton/Button';
@@ -48,6 +50,26 @@ const Home: React.FC = () => {
   const [username, setUsername] = useState('');
   const [prevUsername, setPrevUsername] = useState('');
   const [isLoadingForProfilePicture, setIsLoadingForProfilePicture] = useState(false);
+
+  // For LocalStorage
+  const [generatedUrls, setGeneratedUrls] = useState<any>([]);
+
+  const handleSaveLocalStorage = ({ url, page, username }: { url: string; page: string; username: string }) => {
+    const isUrlExists = generatedUrls.some((item: any) => item.url === url);
+
+    if (!isUrlExists) {
+      const updatedGeneratedUrls = [
+        ...generatedUrls,
+        {
+          url,
+          page,
+          username,
+        },
+      ];
+      setGeneratedUrls(updatedGeneratedUrls);
+      localStorage.setItem('generatedUrls', JSON.stringify(updatedGeneratedUrls));
+    }
+  };
 
   const getInstagramUserId = async (username: string) => {
     if (!executeRecaptcha) {
@@ -114,6 +136,7 @@ const Home: React.FC = () => {
 
             if (userId) {
               finalUrl = INSTAGRAM_GRAPHQL_URL_FOR_STORIES.replace('<USER_ID>', userId as any);
+              handleSaveLocalStorage({ page: 'Stories', url: finalUrl, username });
             }
           } else {
             const usernameMatch = url.match(INSTAGRAM_USERNAME_REGEX_FOR_PROFILE);
@@ -123,6 +146,7 @@ const Home: React.FC = () => {
 
             if (userId) {
               finalUrl = INSTAGRAM_GRAPHQL_URL_FOR_STORIES.replace('<USER_ID>', userId as any);
+              handleSaveLocalStorage({ page: 'Profile', url: finalUrl, username });
             }
           }
           if (finalUrl) {
@@ -192,11 +216,24 @@ const Home: React.FC = () => {
     }
   };
 
+  const handleDeleteItem = (url: string) => {
+    const updatedGeneratedUrls = generatedUrls.filter((item: any) => item.url !== url);
+    setGeneratedUrls(updatedGeneratedUrls);
+    localStorage.setItem('generatedUrls', JSON.stringify(updatedGeneratedUrls));
+  };
+
   useEffect(() => {
     if (isCopied) {
       toast.success('Copied');
     }
   }, [isCopied]);
+
+  useEffect(() => {
+    const storedGeneratedUrls = localStorage.getItem('generatedUrls');
+    if (storedGeneratedUrls) {
+      setGeneratedUrls(JSON.parse(storedGeneratedUrls));
+    }
+  }, []);
 
   if (processedData) {
     const parsedData = JSON.parse(processedData);
@@ -219,6 +256,33 @@ const Home: React.FC = () => {
             }}
             onBlur={handleGenerateUrl}
           />
+
+          {generatedUrls && (
+            <details className={styles.recentItemsContainer}>
+              <summary className={styles.recentItemsSummary}>Recent Items</summary>
+              {Array.from(new Set(generatedUrls.map((item: any) => item.page))).map((category, categoryIndex) => {
+                const categoryItems = generatedUrls.filter((item: any) => item.page === category);
+
+                return (
+                  <div key={categoryIndex} className={styles.categoryContainer}>
+                    <h3 className={styles.categoryTitle}>{category as string}</h3>
+                    <div className={styles.localStorageItems}>
+                      {categoryItems.map((item: any, itemIndex: number) => (
+                        <div key={itemIndex} className={styles.itemContainer}>
+                          <Button variant="primary" onClick={() => copyToClipboard(item.url)}>
+                            {item.username}
+                          </Button>
+                          <div onClick={() => handleDeleteItem(item.url)}>
+                            <IconX className={styles.deleteIcon} />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </details>
+          )}
 
           <div className={styles.description}>
             Copy the generated link and open it in a new tab. Then copy the JSON output from the tab
