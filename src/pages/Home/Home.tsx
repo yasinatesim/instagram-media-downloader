@@ -120,16 +120,19 @@ const Home: React.FC = () => {
 
       if (url !== prevUrl) {
         if (url.includes('instagram')) {
-          if (url.includes(`${INSTAGRAM_POSTPAGE_REGEX}`) || url.includes(`${INSTAGRAM_REELSPAGE_REGEX}`)) {
-            finalUrl = `${url}${INSTAGRAM_URL_PARAMS}`;
-          } else if (INSTAGRAM_HIGHLIGHTSPAGE_REGEX.test(url)) {
-            const match = url.match(INSTAGRAM_HIGHLIGHT_ID_REGEX);
+          if (
+            urlObj.href.includes(`${INSTAGRAM_POSTPAGE_REGEX}`) ||
+            urlObj.href.includes(`${INSTAGRAM_REELSPAGE_REGEX}`)
+          ) {
+            finalUrl = `${urlObj.href}${INSTAGRAM_URL_PARAMS}`;
+          } else if (INSTAGRAM_HIGHLIGHTSPAGE_REGEX.test(urlObj.href)) {
+            const match = urlObj.href.match(INSTAGRAM_HIGHLIGHT_ID_REGEX);
 
             if (match && match[1]) {
               finalUrl = INSTAGRAM_GRAPHQL_URL_FOR_HIGHLIGHTS.replace('<HIGHLIGHT_ID>', match[1] as any);
             }
-          } else if (INSTAGRAM_USERNAME_REGEX_FOR_STORIES.test(url)) {
-            const usernameMatch = url.match(INSTAGRAM_USERNAME_REGEX_FOR_STORIES);
+          } else if (INSTAGRAM_USERNAME_REGEX_FOR_STORIES.test(urlObj.href)) {
+            const usernameMatch = urlObj.href.match(INSTAGRAM_USERNAME_REGEX_FOR_STORIES);
             const username: any = usernameMatch && usernameMatch[1];
 
             const userId = await getInstagramUserId(username);
@@ -139,7 +142,7 @@ const Home: React.FC = () => {
               handleSaveLocalStorage({ page: 'Stories', url: finalUrl, username });
             }
           } else {
-            const usernameMatch = url.match(INSTAGRAM_USERNAME_REGEX_FOR_PROFILE);
+            const usernameMatch = urlObj.href.match(INSTAGRAM_USERNAME_REGEX_FOR_PROFILE);
             const username: any = usernameMatch && usernameMatch[1];
 
             const userId = await getInstagramUserId(username);
