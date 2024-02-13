@@ -99,7 +99,7 @@ const Home: React.FC = () => {
 
       return data.userId;
     } catch (error: any) {
-      toast.error(`API error: ${error.response?.data.error.message ?? error.message}`);
+      toast.error(`API error: ${error?.response?.data?.error?.message ?? error.message}`);
     }
   };
 
@@ -154,8 +154,6 @@ const Home: React.FC = () => {
           }
           if (finalUrl) {
             setGeneratedUrl(finalUrl);
-          } else {
-            toast.error('Failed to generate URL. Please check the input and try again.');
           }
         } else {
           toast.error('Invalid URL. Must be an Instagram URL.');
