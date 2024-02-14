@@ -16,27 +16,29 @@ export async function POST(request: NextRequest) {
     throw new Error('Invalid username format');
   }
 
-  const recaptchaResponse = await verifyRecaptcha(token);
+  try {
+    const recaptchaResponse = await verifyRecaptcha(token);
 
-  if (recaptchaResponse.success && recaptchaResponse.score >= RECAPTCHA_THRESHOLD) {
-    try {
-      const userId = await getUserId(username);
+    if (recaptchaResponse.success && recaptchaResponse.score >= RECAPTCHA_THRESHOLD) {
+      try {
+        const userId = await getUserId(username);
 
-      return new Response(
-        JSON.stringify({
-          userId,
-        }),
-        { status: 200 }
-      );
-    } catch (error) {
-      console.error('Instagram API request failed. Falling back to alternative method.', error);
+        return new Response(
+          JSON.stringify({
+            userId,
+          }),
+          { status: 200 }
+        );
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Something went wrong';
+        const errorResponse = { status: 'Failed', message: errorMessage };
 
-      const errorMessage = error instanceof Error ? error.message : 'Something went wrong';
-      const errorResponse = { status: 'Failed', message: errorMessage };
+        await loginFailedError(error as Error);
 
-      await loginFailedError(error as Error);
-
-      return new Response(JSON.stringify({ error: errorResponse }), { status: 400 });
+        return new Response(JSON.stringify({ error: errorResponse }), { status: 400 });
+      }
     }
+  } catch (error) {
+    return new Response(JSON.stringify({ error: (error as Error).message }), { status: 400 });
   }
 }
