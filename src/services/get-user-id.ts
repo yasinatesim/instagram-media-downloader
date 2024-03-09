@@ -66,8 +66,8 @@ async function getUserIdFromProfilePage(username: string) {
   const url = `https://www.instagram.com/${username}/`;
 
   try {
-    const response = await axios.get(url);
-    const $ = cheerio.load(response.data);
+    const response = await fetchData(url);
+    const $ = cheerio.load(response);
 
     const script = $('script')
       // @ts-ignore
