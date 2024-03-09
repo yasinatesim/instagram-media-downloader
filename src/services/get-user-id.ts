@@ -82,8 +82,7 @@ async function getUserIdFromProfilePage(username: string) {
 
     return user_id;
   } catch (error) {
-    console.error('Error:', error);
-    return null;
+    throw new Error('User not found in Profile Page response');
   }
 }
 
