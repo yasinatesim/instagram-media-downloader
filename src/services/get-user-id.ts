@@ -86,33 +86,70 @@ async function getUserIdFromProfilePage(username: string) {
   }
 }
 
+async function getUserIdFromSaveIg(username: string) {
+  try {
+    const response = await axios.post('https://v3.saveig.app/api/get-url', `l=https://www.instagram.com/${username}/`, {
+      headers: {
+        Accept: 'application/json, text/plain, */*',
+        'User-Agent':
+          'Mozilla/5.0 (Linux; Android 9; GM1903 Build/PKQ1.190110.001; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/75.0.3770.143 Mobile Safari/537.36 Instagram 103.1.0.15.119 Android (28/9; 420dpi; 1080x2260; OnePlus; GM1903; OnePlus7; qcom; sv_SE; 164094539)',
+        'sec-fetch-dest': 'empty',
+        'sec-fetch-mode': 'cors',
+        'sec-fetch-site': 'same-origin',
+      },
+    });
+
+    if (response.status !== 200) {
+      throw new Error('Network response was not ok');
+    }
+
+    const decodedURL = decodeURIComponent(response.data.data);
+
+    const idRegex = /"id"\s*:\s*(\d+)/;
+
+    const match = decodedURL.match(idRegex);
+    const userId = match ? match[1] : null;
+
+    return userId;
+  } catch (error) {
+    throw new Error('User not found in Save Ig response');
+  }
+}
+
 async function getUserId(username: string) {
   try {
     return await getUserIdFromProfilePage(username);
   } catch (profilePageError) {
     console.log('profilePage request failed. Trying alternative methods...', profilePageError);
+
     try {
-      return await getUserIdFromWebProfile(username);
-    } catch (webProfileError) {
-      console.log('WebProfile API request failed. Trying alternative methods...', webProfileError);
+      return await getUserIdFromSaveIg(username);
+    } catch (saveIgError) {
+      console.log('saveIgError API request failed. Trying alternative methods...', saveIgError);
       try {
-        return await getUserIdFromTopSearch(username);
-      } catch (topSearchError) {
-        console.log('TopSearch API request failed. Trying alternative methods...', topSearchError);
+        return await getUserIdFromWebProfile(username);
+      } catch (webProfileError) {
+        console.log('WebProfile API request failed. Trying alternative methods...', webProfileError);
         try {
-          return await getUserIdFromInstagramSearch(username);
-        } catch (instagramSearchError) {
-          console.log(
-            'Instagram Search API request failed. Trying the last alternative method...',
-            instagramSearchError
-          );
+          return await getUserIdFromTopSearch(username);
+        } catch (topSearchError) {
+          console.log('TopSearch API request failed. Trying alternative methods...', topSearchError);
           try {
-            const ig = await loginToInstagram();
-            const userId = await ig.user.getIdByUsername(username);
-            return String(userId);
-          } catch (lastError) {
-            const errorMessage = lastError instanceof Error ? lastError.message : 'Error retrieving Instagram user ID';
-            throw new Error(errorMessage);
+            return await getUserIdFromInstagramSearch(username);
+          } catch (instagramSearchError) {
+            console.log(
+              'Instagram Search API request failed. Trying the last alternative method...',
+              instagramSearchError
+            );
+            try {
+              const ig = await loginToInstagram();
+              const userId = await ig.user.getIdByUsername(username);
+              return String(userId);
+            } catch (lastError) {
+              const errorMessage =
+                lastError instanceof Error ? lastError.message : 'Error retrieving Instagram user ID';
+              throw new Error(errorMessage);
+            }
           }
         }
       }

@@ -16,3 +16,8 @@ body {
 a {
   color: inherit;
 }
+
+.grecaptcha-badge {
+  visibility: hidden;
+  z-index: 1010;
+}

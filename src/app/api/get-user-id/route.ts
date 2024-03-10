@@ -4,6 +4,8 @@ import getUserId from '@/services/get-user-id';
 import { loginFailedError } from '@/services/login-instagram';
 import verifyRecaptcha, { RECAPTCHA_THRESHOLD } from '@/services/verify-recaptcha';
 
+import { sleep } from '@/utils/sleep';
+
 // Todo: Implement this -- new service -- for user posts
 // https://www.instagram.com/graphql/query/?query_id=17888483320059182&id={user_id}&first=24
 // or
@@ -20,6 +22,8 @@ export async function POST(request: NextRequest) {
     const recaptchaResponse = await verifyRecaptcha(token);
 
     if (recaptchaResponse.success && recaptchaResponse.score >= RECAPTCHA_THRESHOLD) {
+      await sleep();
+
       try {
         const userId = await getUserId(username);
 
