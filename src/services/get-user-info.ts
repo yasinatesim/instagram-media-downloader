@@ -25,7 +25,7 @@ export async function getUserInfo(username: string) {
 
     return response.data.data;
   } catch (rapidApiError) {
-    console.error('Instagram API request failed. Falling back to alternative method', rapidApiError);
+    console.error('Rapid API request failed. Falling back to alternative method', rapidApiError);
 
     try {
       const url = `https://i.instagram.com/api/v1/users/${userId}/info/`;
