@@ -66,6 +66,8 @@ async function getProfilePicture(username: string) {
 
       if (data?.hd_profile_pic_url_info?.url) {
         return data.hd_profile_pic_url_info.url;
+      } else {
+        throw new Error('User not found in user info response');
       }
     } catch (lastError) {
       const errorMessage = lastError instanceof Error ? lastError.message : 'Error retrieving Instagram user ID';
