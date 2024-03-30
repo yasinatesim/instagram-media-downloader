@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 
-import { getUserInfo } from '@/services/get-user-info';
+import getProfilePicture from '@/services/get-profile-picture';
 import { loginFailedError } from '@/services/login-instagram';
 import verifyRecaptcha, { RECAPTCHA_THRESHOLD } from '@/services/verify-recaptcha';
 
@@ -20,12 +20,12 @@ export async function POST(request: NextRequest) {
       await sleep();
 
       try {
-        const data = await getUserInfo(username);
+        const url = await getProfilePicture(username);
 
-        if (data?.hd_profile_pic_url_info?.url) {
+        if (url) {
           return new Response(
             JSON.stringify({
-              url: data.hd_profile_pic_url_info.url,
+              url,
             }),
             { status: 200 }
           );
