@@ -24,10 +24,10 @@ async function sessionDataExists() {
 export async function loadSessionData() {
   try {
     const doc = await db.collection('data').doc('session').get();
-    return doc.exists ? doc.data() : {};
+    return doc.exists ? doc.data() : '';
   } catch (error) {
     console.log('Error loading session data:', (error as Error).message);
-    return {};
+    return '';
   }
 }
 
