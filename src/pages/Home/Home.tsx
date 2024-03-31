@@ -329,9 +329,13 @@ const Home: React.FC = () => {
           <br />
 
           {profilePicture && (
-            <a href={profilePicture.url}>
-              <img width={300} src={profilePicture.image} alt="" />
-            </a>
+            <>
+              <div className={styles.description}>Please tap to enlarge the image</div>
+
+              <a href={profilePicture.url}>
+                <img width={300} src={profilePicture.image} alt="" />
+              </a>
+            </>
           )}
         </Tab.Content>
       </Tab>

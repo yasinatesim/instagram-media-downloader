@@ -13,7 +13,7 @@ Instagram Media Downloader
 
 
   <p align="center">
-· <a  href="https://instagram-media-downloader.yasinatesim.vercel.app/">View App</a>
+· <a  href="https://instagram-media-downloader.yasinates.com">View App</a>
   </p>
 
 ## 📖 About
