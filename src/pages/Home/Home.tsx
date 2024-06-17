@@ -129,7 +129,8 @@ const Home: React.FC = () => {
             const match = urlObj.href.match(INSTAGRAM_HIGHLIGHT_ID_REGEX);
 
             if (match && match[1]) {
-              finalUrl = INSTAGRAM_GRAPHQL_URL_FOR_HIGHLIGHTS.replace('<HIGHLIGHT_ID>', match[1] as any);
+              finalUrl = INSTAGRAM_GRAPHQL_URL_FOR_HIGHLIGHTS.replace('<HIGHLIGHT_ID>', match[1]);
+              finalUrl = encodeURI(finalUrl);
             }
           } else if (INSTAGRAM_USERNAME_REGEX_FOR_STORIES.test(urlObj.href)) {
             const usernameMatch = urlObj.href.match(INSTAGRAM_USERNAME_REGEX_FOR_STORIES);
@@ -138,7 +139,8 @@ const Home: React.FC = () => {
             const userId = await getInstagramUserId(username);
 
             if (userId) {
-              finalUrl = INSTAGRAM_GRAPHQL_URL_FOR_STORIES.replace('<USER_ID>', userId as any);
+              finalUrl = INSTAGRAM_GRAPHQL_URL_FOR_STORIES.replace('<USER_ID>', userId);
+              finalUrl = encodeURI(finalUrl);
               handleSaveLocalStorage({ page: 'Stories', url: finalUrl, username });
             }
           } else {
@@ -148,7 +150,8 @@ const Home: React.FC = () => {
             const userId = await getInstagramUserId(username);
 
             if (userId) {
-              finalUrl = INSTAGRAM_GRAPHQL_URL_FOR_STORIES.replace('<USER_ID>', userId as any);
+              finalUrl = INSTAGRAM_GRAPHQL_URL_FOR_STORIES.replace('<USER_ID>', userId);
+              finalUrl = encodeURI(finalUrl);
               handleSaveLocalStorage({ page: 'Profile', url: finalUrl, username });
             }
           }
