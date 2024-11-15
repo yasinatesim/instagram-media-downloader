@@ -86,19 +86,38 @@ async function getUserIdFromProfilePage(username: string) {
   }
 }
 
-async function getUserIdFromSaveVid(username: string) {
+async function getUserIdFromInstagramGraphQL(username: string) {
   try {
     const response = await axios.post(
-      'https://v3.savevid.net/api/get-url',
-      `l=https://www.instagram.com/${username}/`,
+      'https://www.instagram.com/graphql/query/',
+      `__d=www&__user=0&__a=1&__req=1o&fb_api_caller_class=RelayModern&fb_api_req_friendly_name=PolarisUserFeedQuery&variables=%7B%22data%22%3A%7B%22count%22%3A12%2C%22include_relationship_info%22%3Atrue%2C%22latest_besties_reel_media%22%3Atrue%2C%22latest_reel_media%22%3Atrue%7D%2C%22username%22%3A%22${username}%22%2C%22__relay_internal__pv__PolarisIsLoggedInrelayprovider%22%3Atrue%2C%22__relay_internal__pv__PolarisFeedShareMenurelayprovider%22%3Atrue%7D&doc_id=8759034877476257`,
       {
         headers: {
-          Accept: 'application/json, text/plain, */*',
-          'User-Agent':
-            'Mozilla/5.0 (Linux; Android 9; GM1903 Build/PKQ1.190110.001; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/75.0.3770.143 Mobile Safari/537.36 Instagram 103.1.0.15.119 Android (28/9; 420dpi; 1080x2260; OnePlus; GM1903; OnePlus7; qcom; sv_SE; 164094539)',
+          accept: '*/*',
+          'accept-language': 'en-US,en;q=0.9,tr;q=0.8,es;q=0.7',
+          'cache-control': 'no-cache',
+          'content-type': 'application/x-www-form-urlencoded',
+          dpr: '1',
+          pragma: 'no-cache',
+          priority: 'u=1, i',
+          'sec-ch-prefers-color-scheme': 'dark',
+          'sec-ch-ua': '"Not A(Brand";v="99", "Google Chrome";v="121", "Chromium";v="121"',
+          'sec-ch-ua-full-version-list':
+            '"Not A(Brand";v="99.0.0.0", "Google Chrome";v="121.0.6167.184", "Chromium";v="121.0.6167.184"',
+          'sec-ch-ua-mobile': '?0',
+          'sec-ch-ua-model': '""',
+          'sec-ch-ua-platform': '"macOS"',
+          'sec-ch-ua-platform-version': '"13.4.1"',
           'sec-fetch-dest': 'empty',
           'sec-fetch-mode': 'cors',
           'sec-fetch-site': 'same-origin',
+          'viewport-width': '1920',
+          'x-asbd-id': '918374',
+          'x-bloks-version-id': 'c6c7b90c445758d2f27d257e0b850f3b5e7b27dfbb81b6a470d6a40cb040a25a',
+          'x-csrftoken': 'yNmAkP3tQl4eV7sHcDoRfW9gZsX1A2bE',
+          'x-fb-friendly-name': 'PolarisUserFeedQuery',
+          'x-fb-lsd': 'pLxQbR4a9HgWu1sVyFnCdM3eLxP9sV7j',
+          'x-ig-app-id': '672145893218637',
         },
       }
     );
@@ -107,16 +126,17 @@ async function getUserIdFromSaveVid(username: string) {
       throw new Error('Network response was not ok');
     }
 
-    const decodedURL = decodeURIComponent(response.data.data);
+    const userId =
+      response?.data?.data?.xdt_api__v1__feed__user_timeline_graphql_connection?.edges?.[0]?.node?.user?.id;
 
-    const idRegex = /"id"\s*:\s*(\d+)/;
-
-    const match = decodedURL.match(idRegex);
-    const userId = match ? match[1] : null;
+    if (!userId) {
+      throw new Error('User ID not found in response');
+    }
 
     return userId;
   } catch (error) {
-    throw new Error('User not found in Save Ig response');
+    console.error('Error fetching user ID:', error);
+    throw new Error('Failed to fetch Instagram user ID');
   }
 }
 
@@ -127,9 +147,12 @@ async function getUserId(username: string) {
     console.log('profilePage request failed. Trying alternative methods...', profilePageError);
 
     try {
-      return await getUserIdFromSaveVid(username);
-    } catch (saveIgError) {
-      console.log('saveIgError API request failed. Trying alternative methods...', saveIgError);
+      return await getUserIdFromInstagramGraphQL(username);
+    } catch (getUserIdFromInstagramGraphQL) {
+      console.log(
+        'getUserIdFromInstagramGraphQL API request failed. Trying alternative methods...',
+        getUserIdFromInstagramGraphQL
+      );
       try {
         return await getUserIdFromWebProfile(username);
       } catch (webProfileError) {
