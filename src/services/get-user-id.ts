@@ -139,7 +139,7 @@ async function getUserIdFromInstagramGraphQL(username: string): Promise<string> 
 
 async function getUserId(username: string) {
   try {
-    // return await getUserIdFromProfilePage(username);
+    return await getUserIdFromProfilePage(username);
   } catch (profilePageError) {
     console.log('profilePage request failed. Trying alternative methods...', profilePageError);
 
