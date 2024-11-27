@@ -86,38 +86,33 @@ async function getUserIdFromProfilePage(username: string) {
   }
 }
 
-async function getUserIdFromInstagramGraphQL(username: string) {
+async function getUserIdFromInstagramGraphQL(username: string): Promise<string> {
   try {
     const response = await axios.post(
-      'https://www.instagram.com/graphql/query/',
-      `__d=www&__user=0&__a=1&__req=1o&fb_api_caller_class=RelayModern&fb_api_req_friendly_name=PolarisUserFeedQuery&variables=%7B%22data%22%3A%7B%22count%22%3A12%2C%22include_relationship_info%22%3Atrue%2C%22latest_besties_reel_media%22%3Atrue%2C%22latest_reel_media%22%3Atrue%7D%2C%22username%22%3A%22${username}%22%2C%22__relay_internal__pv__PolarisIsLoggedInrelayprovider%22%3Atrue%2C%22__relay_internal__pv__PolarisFeedShareMenurelayprovider%22%3Atrue%7D&doc_id=8759034877476257`,
+      'https://www.instagram.com/graphql/query',
+      {
+        av: '69334875141353716',
+        __d: 'www',
+        variables: JSON.stringify({
+          data: {
+            context: 'blended',
+            include_reel: 'true',
+            query: username.trim(),
+            rank_token: '',
+            search_surface: 'web_top_search',
+          },
+          hasQuery: true,
+        }),
+        doc_id: '9153895011291216',
+      },
       {
         headers: {
-          accept: '*/*',
-          'accept-language': 'en-US,en;q=0.9,tr;q=0.8,es;q=0.7',
-          'cache-control': 'no-cache',
-          'content-type': 'application/x-www-form-urlencoded',
-          dpr: '1',
-          pragma: 'no-cache',
-          priority: 'u=1, i',
-          'sec-ch-prefers-color-scheme': 'dark',
-          'sec-ch-ua': '"Not A(Brand";v="99", "Google Chrome";v="121", "Chromium";v="121"',
-          'sec-ch-ua-full-version-list':
-            '"Not A(Brand";v="99.0.0.0", "Google Chrome";v="121.0.6167.184", "Chromium";v="121.0.6167.184"',
-          'sec-ch-ua-mobile': '?0',
-          'sec-ch-ua-model': '""',
-          'sec-ch-ua-platform': '"macOS"',
-          'sec-ch-ua-platform-version': '"13.4.1"',
-          'sec-fetch-dest': 'empty',
-          'sec-fetch-mode': 'cors',
-          'sec-fetch-site': 'same-origin',
-          'viewport-width': '1920',
-          'x-asbd-id': '918374',
-          'x-bloks-version-id': 'c6c7b90c445758d2f27d257e0b850f3b5e7b27dfbb81b6a470d6a40cb040a25a',
-          'x-csrftoken': 'yNmAkP3tQl4eV7sHcDoRfW9gZsX1A2bE',
-          'x-fb-friendly-name': 'PolarisUserFeedQuery',
-          'x-fb-lsd': 'pLxQbR4a9HgWu1sVyFnCdM3eLxP9sV7j',
-          'x-ig-app-id': '672145893218637',
+          'X-IG-App-ID': '672145893218637',
+          'X-CSRFToken': 'yNmAkP3tQl4eV7sHcDoRfW9gZsX1A2bE',
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'X-FB-Friendly-Name': 'PolarisSearchBoxRefetchableQuery',
+          'User-Agent':
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36',
         },
       }
     );
@@ -126,14 +121,16 @@ async function getUserIdFromInstagramGraphQL(username: string) {
       throw new Error('Network response was not ok');
     }
 
-    const userId =
-      response?.data?.data?.xdt_api__v1__feed__user_timeline_graphql_connection?.edges?.[0]?.node?.user?.id;
+    // Assuming the response structure matches the search results
+    // You might need to adjust this path based on the actual response structure
+    const users = response?.data?.data?.xdt_api__v1__fbsearch__topsearch_connection?.users;
+    const targetUser = users?.find((item: any) => item.user.username === username.trim()).user;
 
-    if (!userId) {
+    if (!targetUser?.id) {
       throw new Error('User ID not found in response');
     }
 
-    return userId;
+    return targetUser.id;
   } catch (error) {
     console.error('Error fetching user ID:', error);
     throw new Error('Failed to fetch Instagram user ID');
@@ -142,7 +139,7 @@ async function getUserIdFromInstagramGraphQL(username: string) {
 
 async function getUserId(username: string) {
   try {
-    return await getUserIdFromProfilePage(username);
+    // return await getUserIdFromProfilePage(username);
   } catch (profilePageError) {
     console.log('profilePage request failed. Trying alternative methods...', profilePageError);
 
