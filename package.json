@@ -7,7 +7,7 @@
     "url": "https://github.com/yasinatesim/instagram-media-downloader"
   },
   "engines": {
-    "node": "16"
+    "node": "18"
   },
   "scripts": {
     "dev": "next dev",
