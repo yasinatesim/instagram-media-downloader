@@ -1,11 +1,6 @@
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 
-import { loginToInstagram } from './login-instagram';
-
-import cookieString from '@/utils/cookieString';
-import generateDynamicHeaders from '@/utils/generateDynamicHeaders';
-
 async function fetchData(url: string) {
   const headers = {
     Accept: 'application/json, text/plain, */*',
@@ -14,8 +9,6 @@ async function fetchData(url: string) {
     'sec-fetch-dest': 'empty',
     'sec-fetch-mode': 'cors',
     'sec-fetch-site': 'same-origin',
-    ...generateDynamicHeaders(),
-    cookie: await cookieString(),
   };
 
   const response = await axios.get(url, { headers, maxBodyLength: Infinity, maxRedirects: 0 });
@@ -160,20 +153,10 @@ async function getUserId(username: string) {
           console.log('TopSearch API request failed. Trying alternative methods...', topSearchError);
           try {
             return await getUserIdFromInstagramSearch(username);
-          } catch (instagramSearchError) {
-            console.log(
-              'Instagram Search API request failed. Trying the last alternative method...',
-              instagramSearchError
-            );
-            try {
-              const ig = await loginToInstagram();
-              const userId = await ig.user.getIdByUsername(username);
-              return String(userId);
-            } catch (lastError) {
-              const errorMessage =
-                lastError instanceof Error ? lastError.message : 'Error retrieving Instagram user ID';
-              throw new Error(errorMessage);
-            }
+          } catch (lastError) {
+            console.log('Instagram Search API request failed. Trying the last alternative method...', lastError);
+            lastError instanceof Error ? lastError.message : 'Error retrieving Instagram user ID';
+            throw new Error(lastError instanceof Error ? lastError.message : 'Error retrieving Instagram user ID');
           }
         }
       }

@@ -196,36 +196,10 @@ git clone https://github.com/yasinatesim/instagram-media-downloader.git
 
 ```bash
 
-# Your Firebase - Firestore Database info -> https://console.firebase.google.com/
-NEXT_PUBLIC_FIREBASE_PRIVATE_KEY=
-NEXT_PUBLIC_FIREBASE_PROJECT_ID=
-NEXT_PUBLIC_FIREBASE_CLIENT_EMAIL=
-
-# Rapid Api - https://rapidapi.com/mrngstar/api/instagram-api-20231
-RAPID_API_KEY=
-
 # You need Google Recaptcha token for below field and you should add *localhost* domain in Google Recaptcha console "Domains" section
 # https://www.google.com/recaptcha/admin/create
 NEXT_PUBLIC_RECAPTCHA_SITE_KEY=
 RECAPTCHA_SECRET_KEY=
-
-
-# You need an Instagram account, please enter your Instagram account Username and Password
-IG_USERNAME=
-IG_PASSWORD=
-
-# You need Instagram device string, please choose one on this link -> https://github.com/dilame/instagram-private-api/blob/623a348343e34058c3a286693740aa3698aed3cc/src/samples/devices.json
-
-IG_DEVICE_STRING=
-
-# The project uses to dilame/instagram-private-api.The library has `generateDevice` function and the function return the below fields. Please run this function in the dilame/instagram-private-api project and enter the below fields
-
-# https://github.com/dilame/instagram-private-api/blob/623a348343e34058c3a286693740aa3698aed3cc/src/core/state.ts#L245
-IG_DEVICE_ID=
-IG_UUID=
-IG_PHONE_ID=
-IG_ADID=
-IG_BUILD=
 
 ```
 

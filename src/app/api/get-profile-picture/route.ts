@@ -1,7 +1,6 @@
 import { NextRequest } from 'next/server';
 
 import getProfilePicture from '@/services/get-profile-picture';
-import { loginFailedError } from '@/services/login-instagram';
 import verifyRecaptcha, { RECAPTCHA_THRESHOLD } from '@/services/verify-recaptcha';
 
 import { sleep } from '@/utils/sleep';
@@ -29,15 +28,10 @@ export async function POST(request: NextRequest) {
             }),
             { status: 200 }
           );
-        } else {
-          await loginFailedError({ name: 'login_required', message: 'login_required' });
-          throw new Error('Session expired, please try again');
         }
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Something went wrong';
         const errorResponse = { status: 'Failed', message: errorMessage };
-
-        await loginFailedError(error as Error);
 
         return new Response(JSON.stringify({ error: errorResponse }), { status: 400 });
       }
