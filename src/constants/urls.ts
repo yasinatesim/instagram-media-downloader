@@ -1,4 +1,4 @@
-export const INSTAGRAM_URL_PARAMS = '?__a=1&__d=dis';
 export const INSTAGRAM_PROFILE_URL = `https://www.instagram.com/<USER_NAME>`;
 export const INSTAGRAM_GRAPHQL_URL_FOR_STORIES = `https://www.instagram.com/graphql/query/?query_hash=de8017ee0a7c9c45ec4260733d81ea31&variables={"reel_ids":["<USER_ID>"],"tag_names":[],"location_ids":[],"highlight_reel_ids":[],"precomposed_overlay":false,"show_story_viewer_list":true,"story_viewer_fetch_count":50,"story_viewer_cursor":""}`;
 export const INSTAGRAM_GRAPHQL_URL_FOR_HIGHLIGHTS = `https://www.instagram.com/graphql/query/?query_hash=de8017ee0a7c9c45ec4260733d81ea31&variables={"reel_ids":[],"tag_names":[],"location_ids":[],"highlight_reel_ids":["<HIGHLIGHT_ID>"],"precomposed_overlay":false,"show_story_viewer_list":true,"story_viewer_fetch_count":50,"story_viewer_cursor":""}`;
+export const INSTAGRAM_GRAPHQL_URL_FOR_POST = `https://www.instagram.com/graphql/query/?doc_id=8845758582119845&variables={\"shortcode\":\"<SHORTCODE>\",\"fetch_tagged_user_count\":null,\"hoisted_comment_id\":null,\"hoisted_reply_id\":null}`;

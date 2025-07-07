@@ -11,7 +11,7 @@ import fetchProxyImage from '@/services/fetch-proxy-image';
 import styles from './Card.module.scss';
 
 type Props = {
-  index?: string;
+  index?: string | number;
   imageUrl: string;
   hasVideo: boolean;
   videoUrl: string;

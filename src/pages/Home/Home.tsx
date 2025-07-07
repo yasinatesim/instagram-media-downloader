@@ -15,8 +15,8 @@ import {
 } from '@/constants/regexes';
 import {
   INSTAGRAM_GRAPHQL_URL_FOR_HIGHLIGHTS,
+  INSTAGRAM_GRAPHQL_URL_FOR_POST,
   INSTAGRAM_GRAPHQL_URL_FOR_STORIES,
-  INSTAGRAM_URL_PARAMS,
 } from '@/constants/urls';
 
 import { useCopyToClipboard } from '@/hooks';
@@ -120,11 +120,22 @@ const Home: React.FC = () => {
 
       if (url !== prevUrl) {
         if (url.includes('instagram')) {
-          if (
-            urlObj.href.includes(`${INSTAGRAM_POSTPAGE_REGEX}`) ||
-            urlObj.href.includes(`${INSTAGRAM_REELSPAGE_REGEX}`)
-          ) {
-            finalUrl = `${urlObj.href}${INSTAGRAM_URL_PARAMS}`;
+          if (urlObj.href.includes(`${INSTAGRAM_POSTPAGE_REGEX}`)) {
+            // Extract shortcode from post URL
+            const match = urlObj.pathname.match(/\/p\/([^/]+)/);
+            const shortcode = match && match[1];
+            if (shortcode) {
+              finalUrl = INSTAGRAM_GRAPHQL_URL_FOR_POST.replace('<SHORTCODE>', shortcode);
+              finalUrl = encodeURI(finalUrl);
+            }
+          } else if (urlObj.href.includes(`${INSTAGRAM_REELSPAGE_REGEX}`)) {
+            // Extract shortcode from reels URL
+            const match = urlObj.pathname.match(/\/reel\/([^/]+)/);
+            const shortcode = match && match[1];
+            if (shortcode) {
+              finalUrl = INSTAGRAM_GRAPHQL_URL_FOR_POST.replace('<SHORTCODE>', shortcode);
+              finalUrl = encodeURI(finalUrl);
+            }
           } else if (INSTAGRAM_HIGHLIGHTSPAGE_REGEX.test(urlObj.href)) {
             const match = urlObj.href.match(INSTAGRAM_HIGHLIGHT_ID_REGEX);
 
@@ -240,8 +251,21 @@ const Home: React.FC = () => {
   }, []);
 
   if (processedData) {
-    const parsedData = JSON.parse(processedData);
+    let parsedData;
+    try {
+      parsedData = JSON.parse(processedData);
+    } catch (e) {
+      toast.error('Invalid JSON');
+      return null;
+    }
 
+    // Instagram Post JSON (GraphQL) special handling
+    if (parsedData?.data?.xdt_shortcode_media) {
+      // Wrap post data in a structure compatible with Gallery
+      return <Gallery result={{ items: [parsedData.data.xdt_shortcode_media] }} />;
+    }
+
+    // Default: pass as is
     return <Gallery result={parsedData} />;
   }
 

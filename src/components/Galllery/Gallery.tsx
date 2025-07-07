@@ -30,6 +30,36 @@ const Gallery = ({ result }: Props) => {
     );
   }
 
+  // Instagram GraphQL Post (xdt_shortcode_media) and Sidecar (multi-image/video) support
+  if (result?.items?.[0]?.__typename === 'XDTGraphImage' || result?.items?.[0]?.__typename === 'XDTGraphVideo') {
+    const post = result.items[0];
+    const imageUrl = post.display_url || post.thumbnail_src;
+    const hasVideo = !!post.video_url;
+    const videoUrl = post.video_url || '';
+    return (
+      <div className="container">
+        <Gallery.Description />
+        <Card imageUrl={imageUrl} hasVideo={hasVideo} videoUrl={videoUrl} />
+      </div>
+    );
+  }
+
+  if (result?.items?.[0]?.__typename === 'XDTGraphSidecar' && result?.items?.[0]?.edge_sidecar_to_children?.edges) {
+    const edges = result.items[0].edge_sidecar_to_children.edges;
+    return (
+      <div className="container">
+        <Gallery.Description />
+        {edges.map((edge: any, key: number) => {
+          const node = edge.node;
+          const imageUrl = node.display_url || node.thumbnail_src;
+          const hasVideo = !!node.video_url;
+          const videoUrl = node.video_url || '';
+          return <Card key={key} index={key + 1} imageUrl={imageUrl} hasVideo={hasVideo} videoUrl={videoUrl} />;
+        })}
+      </div>
+    );
+  }
+
   if (result?.items?.[0]?.carousel_media) {
     return (
       <div className="container">
