@@ -44,6 +44,13 @@ const Home: React.FC = () => {
   const [generatedUrl, setGeneratedUrl] = useState('');
   const [jsonInput, setJsonInput] = useState('');
   const [profilePicture, setProfilePicture] = useState<any>(null);
+  const [manualProfilePicStep, setManualProfilePicStep] = useState<null | {
+    url: string;
+    message: string;
+    instructions: string;
+    example: string;
+  }>(null);
+  const [manualJsonInput, setManualJsonInput] = useState('');
   const [processedData, setProcessedData] = useState<any>(null);
 
   // Profile Picture Tab
@@ -221,13 +228,48 @@ const Home: React.FC = () => {
           image,
           url: data.url,
         });
+        setManualProfilePicStep(null);
         setIsLoadingForProfilePicture(false);
       } catch (error: any) {
-        toast.error(`API error: ${error.response?.data.error.message ?? error.message}`);
         setIsLoadingForProfilePicture(false);
+        // Eğer backend'den özel bir JSON mesajı dönerse, kullanıcıya göster
+        let errMsg = error.response?.data?.error?.message ?? error.message;
+        try {
+          const parsed = JSON.parse(errMsg);
+          if (parsed && parsed.url && parsed.message) {
+            setManualProfilePicStep(parsed);
+            setProfilePicture(null);
+            return;
+          }
+        } catch (e) {}
+        toast.error(`API error: ${errMsg}`);
       }
     } else {
       toast.error('The username cannot be the same as the previous one');
+    }
+  };
+
+  // Kullanıcı manuel JSON yapıştırınca çalışacak fonksiyon
+  const handleManualJsonSubmit = async (e: any) => {
+    e.preventDefault();
+    try {
+      setManualJsonInput(e.target.value);
+      const parsed = JSON.parse(e.target.value);
+      const url = parsed?.data?.user?.hd_profile_pic_url_info?.url;
+      if (url) {
+        const image = await fetchProxyImage(url);
+
+        setProfilePicture({
+          image,
+          url,
+        });
+        setManualProfilePicStep(null);
+        setPrevUsername(username);
+      } else {
+        toast.error('Invalid JSON. Please ensure it contains the correct structure.');
+      }
+    } catch (e) {
+      toast.error('Invalid JSON');
     }
   };
 
@@ -355,10 +397,24 @@ const Home: React.FC = () => {
           <br />
           <br />
 
+          {/* Manuel JSON ile profil fotoğrafı alma adımı */}
+          {manualProfilePicStep && (
+            <div className={styles.manualProfilePicStep}>
+              <div className={styles.description}>{manualProfilePicStep.message}</div>
+              <Input
+                placeholder="Generated URL"
+                value={manualProfilePicStep.url}
+                readOnly
+                onCopy={() => copyToClipboard(manualProfilePicStep.url)}
+              />
+              <div className={styles.description}>{manualProfilePicStep.instructions}</div>
+              <TextArea placeholder="Paste JSON Data" value={manualJsonInput} onChange={handleManualJsonSubmit} />
+            </div>
+          )}
+
           {profilePicture && (
             <>
               <div className={styles.description}>Please tap to enlarge the image</div>
-
               <a href={profilePicture.url}>
                 <img width={300} src={profilePicture.image} alt="" />
               </a>
