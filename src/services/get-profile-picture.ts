@@ -70,17 +70,15 @@ async function getProfilePicture(username: string) {
         throw new Error('User not found in user info response');
       }
     } catch (lastError) {
-      // Yeni fallback: kullanıcıya manuel json yapıştırmasını iste
       const userId = await getUserId(username);
       const generatedUrl = `https://www.instagram.com/graphql/query/?doc_id=9539110062771438&variables={\"id\":\"${userId}\",\"render_surface\":\"PROFILE\"}`;
       const manualInputMessage = {
         message:
-          'Otomatik olarak profil fotoğrafı alınamadı. Lütfen aşağıdaki URL ile Instagram’dan JSON verisini kopyalayıp, çıkan JSON’u aşağıya yapıştırın.',
+          'Automatic profile picture could not be retrieved. Please copy the JSON data from the Instagram page and paste it below.',
         url: generatedUrl,
-        instructions: 'Açılan sayfada çıkan JSON verisini kopyalayıp, aşağıdaki inputa yapıştırın.',
-        example: '{"data":{"user":{"hd_profile_pic_url_info":{"url":"<HD_PROFILE_PIC_URL>"}}}}',
+        instructions: 'Copy the JSON data from the opened page and paste it below.',
       };
-      // Bu mesajı frontend'e iletmek için bir Error objesi olarak fırlatıyoruz
+
       throw new Error(JSON.stringify(manualInputMessage));
     }
   }

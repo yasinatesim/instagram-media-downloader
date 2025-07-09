@@ -48,7 +48,6 @@ const Home: React.FC = () => {
     url: string;
     message: string;
     instructions: string;
-    example: string;
   }>(null);
   const [manualJsonInput, setManualJsonInput] = useState('');
   const [processedData, setProcessedData] = useState<any>(null);
@@ -232,7 +231,6 @@ const Home: React.FC = () => {
         setIsLoadingForProfilePicture(false);
       } catch (error: any) {
         setIsLoadingForProfilePicture(false);
-        // Eğer backend'den özel bir JSON mesajı dönerse, kullanıcıya göster
         let errMsg = error.response?.data?.error?.message ?? error.message;
         try {
           const parsed = JSON.parse(errMsg);
