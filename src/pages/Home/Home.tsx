@@ -305,6 +305,13 @@ const Home: React.FC = () => {
       return <Gallery result={{ items: [parsedData.data.xdt_shortcode_media] }} />;
     }
 
+    // Instagram Profile Posts JSON (GraphQL) special handling
+    if (parsedData?.data?.xdt_api__v1__feed__user_timeline_graphql_connection?.edges) {
+      const edges = parsedData.data.xdt_api__v1__feed__user_timeline_graphql_connection.edges;
+      const items = edges.map((edge: any) => edge.node);
+      return <Gallery result={{ items }} />;
+    }
+
     // Default: pass as is
     return <Gallery result={parsedData} />;
   }
@@ -322,7 +329,19 @@ const Home: React.FC = () => {
             onChange={(e) => {
               setUrl(e.target.value);
             }}
-            onBlur={handleGenerateUrl}
+            onBlur={async () => {
+              let input = url.trim();
+              if (input && !/^https?:\/\//.test(input) && !input.includes('instagram.com')) {
+                const userId = await getInstagramUserId(input);
+                if (userId) {
+                  const generated = `https://www.instagram.com/graphql/query/?doc_id=8759034877476257&variables=%7B%22data%22%3A%7B%22count%22%3A12%2C%22include_relationship_info%22%3Atrue%2C%22latest_besties_reel_media%22%3Atrue%2C%22latest_reel_media%22%3Atrue%7D%2C%22username%22%3A%22${input}%22%2C%22__relay_internal__pv__PolarisIsLoggedInrelayprovider%22%3Atrue%2C%22__relay_internal__pv__PolarisFeedShareMenurelayprovider%22%3Atrue%7D`;
+                  setGeneratedUrl(generated);
+                  handleSaveLocalStorage({ page: 'UserPosts', url: generated, username: input });
+                  return;
+                }
+              }
+              handleGenerateUrl();
+            }}
           />
 
           {generatedUrls && (

@@ -60,6 +60,50 @@ const Gallery = ({ result }: Props) => {
     );
   }
 
+  if (result?.items?.[0]?.__typename === 'XDTMediaDict' || result?.items?.[0]?.media_type) {
+    return (
+      <div className="container">
+        <Gallery.Description />
+        {result.items.map((item: any, key: number) => {
+          // Carousel post ise
+          if (item.media_type === 8 && item.carousel_media) {
+            return item.carousel_media.map((carouselItem: any, ckey: number) => (
+              <Card
+                key={`${key}-${ckey}`}
+                index={ckey + 1}
+                imageUrl={carouselItem?.image_versions2?.candidates?.[0]?.url}
+                hasVideo={carouselItem?.video_versions}
+                videoUrl={carouselItem?.video_versions?.[0]?.url}
+              />
+            ));
+          }
+
+          if (item.media_type === 2 && item.video_versions) {
+            return (
+              <Card
+                key={key}
+                index={key + 1}
+                imageUrl={item?.image_versions2?.candidates?.[0]?.url}
+                hasVideo={item?.video_versions}
+                videoUrl={item?.video_versions?.[0]?.url}
+              />
+            );
+          }
+
+          return (
+            <Card
+              key={key}
+              index={key + 1}
+              imageUrl={item?.image_versions2?.candidates?.[0]?.url}
+              hasVideo={false}
+              videoUrl={''}
+            />
+          );
+        })}
+      </div>
+    );
+  }
+
   if (result?.items?.[0]?.carousel_media) {
     return (
       <div className="container">
