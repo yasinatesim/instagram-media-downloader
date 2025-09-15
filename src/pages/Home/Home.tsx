@@ -17,6 +17,7 @@ import {
   INSTAGRAM_GRAPHQL_URL_FOR_HIGHLIGHTS,
   INSTAGRAM_GRAPHQL_URL_FOR_POST,
   INSTAGRAM_GRAPHQL_URL_FOR_STORIES,
+  INSTAGRAM_GRAPHQL_URL_FOR_USER_POSTS,
 } from '@/constants/urls';
 
 import { useCopyToClipboard } from '@/hooks';
@@ -334,7 +335,7 @@ const Home: React.FC = () => {
               if (input && !/^https?:\/\//.test(input) && !input.includes('instagram.com')) {
                 const userId = await getInstagramUserId(input);
                 if (userId) {
-                  const generated = `https://www.instagram.com/graphql/query/?doc_id=8759034877476257&variables=%7B%22data%22%3A%7B%22count%22%3A12%2C%22include_relationship_info%22%3Atrue%2C%22latest_besties_reel_media%22%3Atrue%2C%22latest_reel_media%22%3Atrue%7D%2C%22username%22%3A%22${input}%22%2C%22__relay_internal__pv__PolarisIsLoggedInrelayprovider%22%3Atrue%2C%22__relay_internal__pv__PolarisFeedShareMenurelayprovider%22%3Atrue%7D`;
+                  const generated = INSTAGRAM_GRAPHQL_URL_FOR_USER_POSTS.replace('<USERNAME>', input);
                   setGeneratedUrl(generated);
                   handleSaveLocalStorage({ page: 'UserPosts', url: generated, username: input });
                   return;
