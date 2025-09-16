@@ -310,7 +310,12 @@ const Home: React.FC = () => {
     if (parsedData?.data?.xdt_api__v1__feed__user_timeline_graphql_connection?.edges) {
       const edges = parsedData.data.xdt_api__v1__feed__user_timeline_graphql_connection.edges;
       const items = edges.map((edge: any) => edge.node);
-      return <Gallery result={{ items }} />;
+      // end_cursor değerini al
+      const endCursor = parsedData.data.xdt_api__v1__feed__user_timeline_graphql_connection.page_info?.end_cursor;
+      const usernameForPosts =
+        parsedData.data.xdt_api__v1__feed__user_timeline_graphql_connection.edges?.[0]?.node.user.username;
+
+      return <Gallery result={{ items }} endCursor={endCursor} username={usernameForPosts} />;
     }
 
     // Default: pass as is

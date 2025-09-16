@@ -21,11 +21,11 @@
 
 .copyButton {
   cursor: pointer;
-  background-color: #3498db; /* Arka plan rengi */
-  color: #ffffff; /* Yazı rengi */
+  background-color: #3498db;
+  color: #ffffff;
   border: none;
   padding: 8px;
-  margin-left: 5px; /* İstenilen boşluk değeri */
+  margin-left: 5px;
   border-radius: 4px;
   display: flex;
   align-items: center;
@@ -33,15 +33,15 @@
   transition: background-color 0.3s ease;
 
   &:hover {
-    background-color: #2980b9; /* Hover durumunda arka plan rengi */
+    background-color: #2980b9;
   }
 
   &:disabled {
-    background-color: #96d5ff; /* Arka plan rengi */
+    background-color: #96d5ff;
     cursor: not-allowed;
   }
 
   svg {
-    font-size: 20px; /* İkon boyutu */
+    font-size: 20px;
   }
 }
