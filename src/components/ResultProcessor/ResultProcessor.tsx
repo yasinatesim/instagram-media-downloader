@@ -67,10 +67,10 @@ const ResultProcessor: React.FC<Props> = ({ onJsonProcessed, endCursor, username
       <div className={styles.description}>
         Paste the JSON data into the input below. You will then be redirected to result page 🎉
       </div>
-      <TextArea 
-        placeholder="Paste JSON Data" 
-        onChange={handleJsonPaste} 
-        value={jsonInput} 
+      <TextArea
+        placeholder="Paste JSON Data"
+        onChange={handleJsonPaste}
+        value={jsonInput}
         onFileUpload={(content) => handleJsonProcessing(content)}
       />
     </div>
