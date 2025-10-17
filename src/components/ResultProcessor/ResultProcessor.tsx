@@ -31,8 +31,7 @@ const ResultProcessor: React.FC<Props> = ({ onJsonProcessed, endCursor, username
     }
   }, [endCursor, username]);
 
-  const handleJsonPaste = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
+  const handleJsonProcessing = (value: string) => {
     setJsonInput(value);
 
     try {
@@ -46,6 +45,11 @@ const ResultProcessor: React.FC<Props> = ({ onJsonProcessed, endCursor, username
         toast.error('Invalid JSON');
       }
     }
+  };
+
+  const handleJsonPaste = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    handleJsonProcessing(value);
   };
 
   return (
@@ -63,7 +67,12 @@ const ResultProcessor: React.FC<Props> = ({ onJsonProcessed, endCursor, username
       <div className={styles.description}>
         Paste the JSON data into the input below. You will then be redirected to result page 🎉
       </div>
-      <TextArea placeholder="Paste JSON Data" onChange={handleJsonPaste} value={jsonInput} />
+      <TextArea 
+        placeholder="Paste JSON Data" 
+        onChange={handleJsonPaste} 
+        value={jsonInput} 
+        onFileUpload={(content) => handleJsonProcessing(content)}
+      />
     </div>
   );
 };
