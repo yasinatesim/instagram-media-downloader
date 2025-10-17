@@ -393,7 +393,15 @@ const Home: React.FC = () => {
           <div className={styles.description}>
             Paste the JSON data into the input below. You will then be redirected to result page 🎉
           </div>
-          <TextArea placeholder="Paste JSON Data" onChange={handleJsonPaste} value={jsonInput} />
+          <TextArea 
+            placeholder="Paste JSON Data" 
+            onChange={handleJsonPaste} 
+            value={jsonInput} 
+            onFileUpload={(content) => {
+              setJsonInput(content);
+              setProcessedData(content);
+            }}
+          />
 
           <HowToUse />
         </Tab.Content>
@@ -431,7 +439,19 @@ const Home: React.FC = () => {
                 onCopy={() => copyToClipboard(manualProfilePicStep.url)}
               />
               <div className={styles.description}>{manualProfilePicStep.instructions}</div>
-              <TextArea placeholder="Paste JSON Data" value={manualJsonInput} onChange={handleManualJsonSubmit} />
+              <TextArea 
+                placeholder="Paste JSON Data" 
+                value={manualJsonInput} 
+                onChange={handleManualJsonSubmit} 
+                onFileUpload={(content) => {
+                  setManualJsonInput(content);
+                  // Create a synthetic event to reuse existing handler
+                  const syntheticEvent = {
+                    target: { value: content }
+                  } as React.ChangeEvent<HTMLInputElement>;
+                  handleManualJsonSubmit(syntheticEvent);
+                }}
+              />
             </div>
           )}
 
