@@ -33,23 +33,21 @@ const Textarea: React.FC<Props> = ({ placeholder, value, onChange, onFileUpload,
   return (
     <div>
       <textarea className={styles.textarea} placeholder={placeholder} onChange={onChange} value={value} {...props} />
-      <input
-        type="file"
-        ref={fileInputRef}
-        onChange={handleFileChange}
-        accept=".json"
-        style={{ display: 'none' }}
-      />
-      <button type="button" onClick={triggerFileInput} style={{ 
-        backgroundColor: '#3498db', 
-        color: 'white', 
-        border: 'none', 
-        padding: '8px 12px', 
-        borderRadius: '4px', 
-        cursor: 'pointer',
-        fontSize: '14px',
-        marginBottom: '16px'
-      }}>
+      <input type="file" ref={fileInputRef} onChange={handleFileChange} accept=".json" style={{ display: 'none' }} />
+      <button
+        type="button"
+        onClick={triggerFileInput}
+        style={{
+          backgroundColor: '#3498db',
+          color: 'white',
+          border: 'none',
+          padding: '8px 12px',
+          borderRadius: '4px',
+          cursor: 'pointer',
+          fontSize: '14px',
+          marginBottom: '16px',
+        }}
+      >
         Upload JSON File
       </button>
     </div>
