@@ -59,21 +59,16 @@ async function getUserIdFromProfilePage(username: string) {
   const url = `https://www.instagram.com/${username}/`;
 
   try {
-    const response = await axios(url);
-    const $ = cheerio.load(response.data);
+    const response = await axios.get(url, {
+      headers: {
+        'User-Agent': 'Googlebot/2.1 (+http://www.google.com/bot.html)',
+      },
+    });
 
-    const script = $('script')
-      // @ts-ignore
-      .filter((i, el) => $(el).html().includes('profilePage_'))
-      .html();
-    // @ts-ignore
-    const user_id_start = script.indexOf('"profilePage_') + '"profilePage_'.length;
-    // @ts-ignore
-    const user_id_end = script.indexOf('"', user_id_start);
-    // @ts-ignore
-    const user_id = script.substring(user_id_start, user_id_end);
+    const match = response.data.match(/"user_id":"(\d+)"/);
+    if (match?.[1]) return match[1];
 
-    return user_id;
+    throw new Error('user_id not found in profile page');
   } catch (error) {
     throw new Error('User not found in Profile Page response');
   }
