@@ -125,7 +125,56 @@ async function getUserIdFromInstagramGraphQL(username: string): Promise<string> 
   }
 }
 
+async function getUserIdFromBrowser(username: string): Promise<string> {
+  let executablePath: string;
+  let args: string[];
+
+  // eslint-disable-next-line
+  const puppeteer = require('puppeteer-core');
+
+  if (process.env.AWS_LAMBDA_FUNCTION_NAME || process.env.NETLIFY) {
+    // eslint-disable-next-line
+    const chromium = require('@sparticuz/chromium');
+    executablePath = await chromium.executablePath();
+    args = chromium.args;
+  } else {
+    executablePath =
+      process.platform === 'darwin'
+        ? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+        : '/usr/bin/google-chrome';
+    args = ['--no-sandbox', '--disable-setuid-sandbox'];
+  }
+
+  const browser = await puppeteer.launch({
+    executablePath,
+    headless: true,
+    args,
+  });
+
+  try {
+    const page = await browser.newPage();
+    await page.goto(`https://www.instagram.com/${username}/`, {
+      waitUntil: 'domcontentloaded',
+      timeout: 15000,
+    });
+
+    const html = await page.content();
+    const match = html.match(/"user_id":"(\d+)"/);
+
+    if (match?.[1]) return match[1];
+    throw new Error('user_id not found in browser page');
+  } finally {
+    await browser.close();
+  }
+}
+
 async function getUserId(username: string) {
+  try {
+    return await getUserIdFromBrowser(username);
+  } catch (browserError) {
+    console.log('Browser method failed. Trying alternative methods...', browserError);
+  }
+
   try {
     return await getUserIdFromProfilePage(username);
   } catch (profilePageError) {

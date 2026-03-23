@@ -18,6 +18,7 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "@sparticuz/chromium": "^143.0.4",
     "axios": "^1.6.7",
     "cheerio": "1.0.0-rc.12",
     "classnames": "^2.5.1",
@@ -25,6 +26,7 @@
     "instagram-private-api": "^1.45.3",
     "next": "14.0.4",
     "node-fetch": "^3.3.2",
+    "puppeteer-core": "^24.40.0",
     "react": "^18",
     "react-dom": "^18",
     "react-google-recaptcha-v3": "^1.10.1",
