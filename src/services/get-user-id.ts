@@ -178,7 +178,7 @@ async function getUserIdFromWorker(username: string): Promise<string> {
     body: JSON.stringify({ username }),
   });
 
-  const data = await res.json() as { userId?: string; error?: string };
+  const data = (await res.json()) as { userId?: string; error?: string };
   if (data.userId) return data.userId;
   throw new Error(data.error ?? 'Worker returned no userId');
 }
