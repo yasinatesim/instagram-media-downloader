@@ -168,7 +168,28 @@ async function getUserIdFromBrowser(username: string): Promise<string> {
   }
 }
 
+async function getUserIdFromWorker(username: string): Promise<string> {
+  const workerUrl = process.env.INSTAGRAM_WORKER_URL;
+  if (!workerUrl) throw new Error('INSTAGRAM_WORKER_URL not set');
+
+  const res = await fetch(workerUrl, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username }),
+  });
+
+  const data = await res.json() as { userId?: string; error?: string };
+  if (data.userId) return data.userId;
+  throw new Error(data.error ?? 'Worker returned no userId');
+}
+
 async function getUserId(username: string) {
+  try {
+    return await getUserIdFromWorker(username);
+  } catch (workerError) {
+    console.log('Worker method failed. Trying alternative methods...', workerError);
+  }
+
   try {
     return await getUserIdFromBrowser(username);
   } catch (browserError) {
