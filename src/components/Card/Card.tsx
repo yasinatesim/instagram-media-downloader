@@ -21,6 +21,7 @@ const Card: React.FC<Props> = ({ index, imageUrl, hasVideo, videoUrl }) => {
   const [proxyImageUrl, setProxyImageUrl] = useState<string | null>(null);
 
   const handleFetchProxyImage = async () => {
+    if (!imageUrl) return;
     const data = await fetchProxyImage(imageUrl);
     setProxyImageUrl(data);
   };
@@ -42,22 +43,26 @@ const Card: React.FC<Props> = ({ index, imageUrl, hasVideo, videoUrl }) => {
           </a>
         )}
 
-        <a
-          href={imageUrl}
-          target="_blank"
-          className={cx(styles.image, {
-            [styles.hasVideo]: hasVideo,
-          })}
-        >
-          {proxyImageUrl ? (
-            <>
-              <img width={300} src={proxyImageUrl} alt={`Image ${imageUrl}`} />
-              <div className={styles.icon}>{hasVideo ? <IconVideoPreview /> : <IconImage />}</div>
-            </>
-          ) : (
-            <span className={styles.loader} />
-          )}
-        </a>
+        {imageUrl ? (
+          <a
+            href={imageUrl}
+            target="_blank"
+            className={cx(styles.image, {
+              [styles.hasVideo]: hasVideo,
+            })}
+          >
+            {proxyImageUrl ? (
+              <>
+                <img width={300} src={proxyImageUrl} alt={`Image ${imageUrl}`} />
+                <div className={styles.icon}>{hasVideo ? <IconVideoPreview /> : <IconImage />}</div>
+              </>
+            ) : (
+              <span className={styles.loader} />
+            )}
+          </a>
+        ) : (
+          <div className={styles.image}>Invalid image URL</div>
+        )}
       </div>
     </div>
   );

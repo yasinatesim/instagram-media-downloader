@@ -306,6 +306,17 @@ const Home: React.FC = () => {
       return <Gallery result={{ items: [parsedData.data.xdt_shortcode_media] }} />;
     }
 
+    // Instagram Web Post JSON (xdt_api__v1__media__shortcode__web_info) special handling
+    if (parsedData?.data?.xdt_api__v1__media__shortcode__web_info?.items) {
+      return (
+        <Gallery
+          result={{
+            items: parsedData.data.xdt_api__v1__media__shortcode__web_info.items,
+          }}
+        />
+      );
+    }
+
     // Instagram Profile Posts JSON (GraphQL) special handling
     if (parsedData?.data?.xdt_api__v1__feed__user_timeline_graphql_connection?.edges) {
       const edges = parsedData.data.xdt_api__v1__feed__user_timeline_graphql_connection.edges;

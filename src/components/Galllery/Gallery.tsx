@@ -97,7 +97,7 @@ const renderGalleryContent = (
           <Card
             key={isAdditionalResult ? `additional-${key}` : key}
             index={key + 1}
-            imageUrl={item?.display_url}
+            imageUrl={item?.display_url || item?.display_uri}
             hasVideo={item?.video_resources}
             videoUrl={item?.video_resources?.[0]?.src}
           />
@@ -113,7 +113,8 @@ const renderGalleryContent = (
   // Instagram GraphQL Post (xdt_shortcode_media) and Sidecar (multi-image/video) support
   if (result?.items?.[0]?.__typename === 'XDTGraphImage' || result?.items?.[0]?.__typename === 'XDTGraphVideo') {
     const post = result.items[0];
-    const imageUrl = post.display_url || post.thumbnail_src;
+    const imageUrl =
+      post.display_url || post.display_uri || post.thumbnail_src || post.image_versions2?.candidates?.[0]?.url;
     const hasVideo = !!post.video_url;
     const videoUrl = post.video_url || '';
     return (
@@ -135,7 +136,8 @@ const renderGalleryContent = (
         {!isAdditionalResult && <Gallery.Description />}
         {edges.map((edge: any, key: number) => {
           const node = edge.node;
-          const imageUrl = node.display_url || node.thumbnail_src;
+          const imageUrl =
+            node.display_url || node.display_uri || node.thumbnail_src || node.image_versions2?.candidates?.[0]?.url;
           const hasVideo = !!node.video_url;
           const videoUrl = node.video_url || '';
           return (
@@ -167,7 +169,7 @@ const renderGalleryContent = (
               <Card
                 key={isAdditionalResult ? `additional-${key}-${ckey}` : `${key}-${ckey}`}
                 index={ckey + 1}
-                imageUrl={carouselItem?.image_versions2?.candidates?.[0]?.url}
+                imageUrl={carouselItem?.image_versions2?.candidates?.[0]?.url || carouselItem?.display_uri}
                 hasVideo={carouselItem?.video_versions}
                 videoUrl={carouselItem?.video_versions?.[0]?.url}
               />
@@ -179,7 +181,7 @@ const renderGalleryContent = (
               <Card
                 key={isAdditionalResult ? `additional-${key}` : key}
                 index={key + 1}
-                imageUrl={item?.image_versions2?.candidates?.[0]?.url}
+                imageUrl={item?.image_versions2?.candidates?.[0]?.url || item?.display_uri}
                 hasVideo={item?.video_versions}
                 videoUrl={item?.video_versions?.[0]?.url}
               />
@@ -190,7 +192,7 @@ const renderGalleryContent = (
             <Card
               key={isAdditionalResult ? `additional-${key}` : key}
               index={key + 1}
-              imageUrl={item?.image_versions2?.candidates?.[0]?.url}
+              imageUrl={item?.image_versions2?.candidates?.[0]?.url || item?.display_uri}
               hasVideo={false}
               videoUrl={''}
             />
@@ -212,7 +214,7 @@ const renderGalleryContent = (
           <Card
             key={isAdditionalResult ? `additional-${key}` : key}
             index={key + 1}
-            imageUrl={item?.image_versions2.candidates[0]?.url}
+            imageUrl={item?.image_versions2?.candidates?.[0]?.url || item?.display_uri}
             hasVideo={item?.video_versions}
             videoUrl={item?.video_versions?.[0]?.url}
           />
@@ -228,7 +230,7 @@ const renderGalleryContent = (
       <div className="container">
         {!isAdditionalResult && <Gallery.Description />}
         <Card
-          imageUrl={result?.items?.[0]?.image_versions2?.candidates?.[0]?.url}
+          imageUrl={result?.items?.[0]?.image_versions2?.candidates?.[0]?.url || result?.items?.[0]?.display_uri}
           hasVideo={result?.items?.[0]?.video_versions}
           videoUrl={result?.items?.[0]?.video_versions?.[0]?.url}
         />
