@@ -11,10 +11,17 @@ async function fetchData(url: string) {
     'sec-fetch-site': 'same-origin',
   };
 
-  const response = await axios.get(url, { headers, maxBodyLength: Infinity, maxRedirects: 0 });
+  const response = await axios.get(url, {
+    headers,
+    maxBodyLength: Infinity,
+    maxRedirects: 0,
+    validateStatus: () => true,
+  });
 
   if (response.status !== 200) {
-    throw new Error(`Request to ${url} failed with status: ${response.status}`);
+    const location = response.headers?.location;
+    const detail = location ? ` -> redirected to ${location}` : ` body=${JSON.stringify(response.data).slice(0, 300)}`;
+    throw new Error(`Request to ${url} failed with status: ${response.status}${detail}`);
   }
 
   return response.data;
