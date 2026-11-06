@@ -319,7 +319,20 @@ const Home: React.FC = () => {
 
     if (parsedData?.data?.xdt_api__v1__feed__reels_media?.reels_media) {
       const reels: { items?: unknown[] }[] = parsedData.data.xdt_api__v1__feed__reels_media.reels_media;
-      return <Gallery result={{ items: reels.flatMap((reel) => reel.items ?? []) }} />;
+      const items = reels.flatMap((reel) => reel.items ?? []);
+      if (items.length === 0) {
+        return (
+          <div className="container">This account has no active stories right now (or you can&apos;t view them).</div>
+        );
+      }
+      return <Gallery result={{ items }} />;
+    }
+
+    const hdProfilePicUrl: string | undefined = parsedData?.data?.user?.hd_profile_pic_url_info?.url;
+    if (hdProfilePicUrl) {
+      return (
+        <Gallery result={{ items: [{ media_type: 1, image_versions2: { candidates: [{ url: hdProfilePicUrl }] } }] }} />
+      );
     }
 
     // Instagram Profile Posts JSON (GraphQL) special handling
