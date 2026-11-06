@@ -317,6 +317,11 @@ const Home: React.FC = () => {
       );
     }
 
+    if (parsedData?.data?.xdt_api__v1__feed__reels_media?.reels_media) {
+      const reels: { items?: unknown[] }[] = parsedData.data.xdt_api__v1__feed__reels_media.reels_media;
+      return <Gallery result={{ items: reels.flatMap((reel) => reel.items ?? []) }} />;
+    }
+
     // Instagram Profile Posts JSON (GraphQL) special handling
     if (parsedData?.data?.xdt_api__v1__feed__user_timeline_graphql_connection?.edges) {
       const edges = parsedData.data.xdt_api__v1__feed__user_timeline_graphql_connection.edges;
